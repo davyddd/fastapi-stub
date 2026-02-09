@@ -1,0 +1,55 @@
+[tool.importlinter]
+root_packages = [
+    "app",
+]
+include_external_packages = true
+
+
+[[tool.importlinter.contracts]]
+name = "Context independence (contexts must not import from each other)"
+type = "independence"
+modules = [
+    "app.probe_context",
+]
+ignore_imports = [
+     "**.infrastructure.** -> **",
+]
+
+
+[[tool.importlinter.contracts]]
+name = "Domain layer purity (domain must not import from fastapi, dramatiq and redis)"
+type = "forbidden"
+source_modules = [
+    "app.probe_context",
+]
+forbidden_modules = [
+    "fastapi",
+    "dramatiq",
+    "apscheduler",
+    "httpx",
+    "ddsql",
+    "sqlmodel",
+    "sqlalchemy",
+    "clickhouse_connect",
+    "redis",
+]
+ignore_imports = [
+    "**.infrastructure.** -> **",
+]
+
+
+[[tool.importlinter.contracts]]
+name = "Layers contract"
+type = "layers"
+containers = [
+    "app.probe_context",
+]
+layers = [
+    "infrastructure.ports",
+    "applications",
+    "(infrastructure.repositories) | (infrastructure.adapters)",
+    "(services)",
+    "(domains)",
+]
+ignore_imports = [
+]

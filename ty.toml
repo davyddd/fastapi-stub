@@ -1,0 +1,36 @@
+[terminal]
+output-format = "concise"
+
+[environment]
+python-version = "3.12"
+python = "/usr/local"
+
+[src]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".ruff_cache",
+    ".pytest_cache",
+    ".import_linter_cache",
+    "fabfile.py",
+    "fab_utils.py",
+    "**/alembic/**",
+]
+
+[rules]
+unused-type-ignore-comment = "ignore"
+deprecated = "warn"
+
+[analysis]
+allowed-unresolved-imports = [
+    "IPython.*",
+    "aioboto3.*",
+    "apscheduler.*",
+    "fabric.*",
+    "msgpack",
+    "msgpack.*",
+    "aiokafka.*",
+    "cryptography.*",
+    "sniffio.*",
+    "pkg_resources.*",
+]

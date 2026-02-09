@@ -1,0 +1,42 @@
+[project]
+name = "project-name"
+description = ""
+version = "1.0.0"
+authors = [{name = "davyddd"}]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "uvicorn[standard]==0.32.0",
+    "fastapi==0.115.3",
+    "starlette==0.41.0",
+    "typer==0.21.1",
+    "pydantic==2.11.2",
+    "pydantic-settings==2.6.0",
+    "dddesign==1.1.7",
+    "sentry-sdk[fastapi]==2.17.0",
+    "psycopg[binary]==3.2.3",
+    "sqlmodel==0.0.22",
+    "alembic==1.13.3",
+    "dramatiq[prometheus,redis,watch]==2.0.1",
+    "apscheduler==3.10.4",
+    "clickhouse-connect==0.8.16",
+    "httpx==0.28.1",
+    "python-json-logger==3.3.0",
+    "ddutils==0.1.1",
+    "clickhouse-sqlalchemy==0.3.2",
+    "jinja2==3.1.6",
+    "ddsql==0.0.1",
+    "redis==6.4.0",
+    "aiokafka==0.13.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipdb==0.13.9",
+    "ipython==8.3.0",
+    "ty==0.0.15",
+    "ruff==0.1.7",
+    "import-linter==1.12.1",
+]
+
+[tool.uv]
+package = false

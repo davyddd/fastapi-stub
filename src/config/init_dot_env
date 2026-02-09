@@ -1,0 +1,15 @@
+DEBUG=True
+PROJECT_NAME=project-name
+SERVER_URL=http://localhost:8000
+ENVIRONMENT=local
+POSTGRES_URL=postgresql+psycopg://postgres_db_user:postgres_db_passwword@postgres:5432/postgres_db
+CLICKHOUSE_URL=clickhouse+asynch://clickhouse_db_user:clickhouse_db_passwword@clickhouse:8123/clickhouse_db
+DRAMATIQ_BROKER_REDIS_URL=redis://redis/1?socket_connect_timeout=2
+DRAMATIQ_RESULT_BACKEND_REDIS_URL=redis://redis/2?socket_connect_timeout=2
+CACHE_REDIS_URL=redis://redis/3?socket_connect_timeout=2
+KAFKA_BOOTSTRAP_SERVERS=["kafka:9092"]
+KAFKA_TOPIC_PARTITIONS_SES_EVENT=1
+KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT=1
+# not represented in settings
+DB_CONNECTIONS_CLOSER_PATH=config.databases.services.db_connections_closer.close_db_connections
+SQL_TEMPLATES_DIR=/app/src/templates/sql/
