@@ -1,0 +1,1 @@
+from .register_user import register_user_app_factory
