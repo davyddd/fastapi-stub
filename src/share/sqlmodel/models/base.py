@@ -47,9 +47,18 @@ class BaseSQLModel(SQLModel, Generic[EntityT], metaclass=BaseSQLModelMeta):
         return result
 
     def to_entity(self) -> EntityT:
-        data = {field: getattr(self, field) for field in self._entity_class.model_fields if hasattr(self, field)}
+        data: dict[str, Any] = {}
+        for field_name, field_info in self._entity_class.model_fields.items():
+            if hasattr(self, field_name):
+                data[field_name] = getattr(self, field_name)
+                continue
+
+            alias = field_info.alias
+            if alias and hasattr(self, alias):
+                data[field_name] = getattr(self, alias)
+
         return cast(EntityT, self._entity_class(**data))
 
     @classmethod
     def from_entity(cls, entity: EntityT) -> Self:
-        return cls.model_validate(entity.model_dump(mode='json'))
+        return cls.model_validate(entity.model_dump(mode='json', by_alias=True))
