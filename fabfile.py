@@ -20,7 +20,7 @@ def base():
 
 def build(service=BASE_SERVICE_NAME):
     base()
-    local(f'docker-compose build {service}')
+    local(f'docker compose build {service}')
 
 
 def _run_command_container(service, command):
@@ -30,7 +30,7 @@ def _run_command_container(service, command):
     if container_id:
         local(f'docker exec -it {container_id} bash -c "{command}"')
     else:
-        local(f'docker-compose run --rm --service-ports {service} bash -c "{command}"')
+        local(f'docker compose run --rm --service-ports {service} bash -c "{command}"')
 
 
 def run():

@@ -20,7 +20,7 @@ services:
         <<: *server-template
         command: python manage.py runserver
         ports:
-            - 8000:8000
+            - 18000:8000
 
     worker:
         <<: *server-template
@@ -33,7 +33,7 @@ services:
     postgres:
         image: postgres:16.2-alpine
         ports:
-            - 5432:5432
+            - 15432:5432
         environment:
             POSTGRES_DB: postgres_db
             POSTGRES_USER: postgres_db_user
@@ -42,12 +42,12 @@ services:
     zookeeper:
         image: zookeeper:3.8
         ports:
-            - 2181:2181
+            - 12181:2181
 
     clickhouse:
         image: clickhouse/clickhouse-server:25.3-alpine
         ports:
-            - 8123:8123
+            - 18123:8123
         environment:
             CLICKHOUSE_DB: clickhouse_db
             CLICKHOUSE_USER: clickhouse_db_user
@@ -61,7 +61,7 @@ services:
     redis:
         image: redis/redis-stack:7.2.0-v13
         ports:
-            - 6379:6379
+            - 16379:6379
 
     kafka-ui:
         image: kafbat/kafka-ui:d285a69
@@ -72,7 +72,7 @@ services:
             - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
             - KAFKA_CLUSTERS_0_ZOOKEEPER=
         ports:
-            - 8080:8080
+            - 18080:8080
 
     kafka:
         image: bitnamilegacy/kafka:4.0.0
