@@ -1,9 +1,11 @@
-from dddesign.structure.infrastructure.repositories import Repository
 from sqlmodel import select
+
+from dddesign.structure.infrastructure.repositories import Repository
+
+from config.databases.postgres import Atomic
 
 from app.user_context.domains.entities import UserEntity
 from app.user_context.infrastructure.models import UserModel
-from config.databases.postgres import Atomic
 
 
 class UserRepository(Repository):

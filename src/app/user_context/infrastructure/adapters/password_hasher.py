@@ -11,16 +11,9 @@ class PasswordHasher:
     _p: int = 1
     _dklen: int = 64
 
-    def hash(self, password: str) -> str:
+    def hash_password(self, password: str) -> str:
         salt = os.urandom(self._salt_size)
-        password_hash = hashlib.scrypt(
-            password.encode('utf-8'),
-            salt=salt,
-            n=self._n,
-            r=self._r,
-            p=self._p,
-            dklen=self._dklen,
-        )
+        password_hash = hashlib.scrypt(password.encode('utf-8'), salt=salt, n=self._n, r=self._r, p=self._p, dklen=self._dklen)
         encoded_salt = base64.b64encode(salt).decode('ascii')
         encoded_hash = base64.b64encode(password_hash).decode('ascii')
         return f'scrypt${self._n}${self._r}${self._p}${encoded_salt}${encoded_hash}'
@@ -33,12 +26,7 @@ class PasswordHasher:
         salt = base64.b64decode(encoded_salt.encode('ascii'))
         expected_hash = base64.b64decode(encoded_hash.encode('ascii'))
         password_hash = hashlib.scrypt(
-            password.encode('utf-8'),
-            salt=salt,
-            n=int(n),
-            r=int(r),
-            p=int(p),
-            dklen=len(expected_hash),
+            password.encode('utf-8'), salt=salt, n=int(n), r=int(r), p=int(p), dklen=len(expected_hash)
         )
         return hmac.compare_digest(password_hash, expected_hash)
 

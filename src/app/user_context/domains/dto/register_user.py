@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class RegisterUserRequestDTO(BaseModel):
@@ -10,7 +10,9 @@ class RegisterUserRequestDTO(BaseModel):
 
 
 class RegisterUserResponseDTO(BaseModel):
-    id: UUID
+    model_config = ConfigDict(populate_by_name=True)
+
+    user_id: UUID = Field(alias='id')
     email: EmailStr
     created_at: datetime | None = None
     updated_at: datetime | None = None

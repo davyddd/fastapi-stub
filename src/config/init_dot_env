@@ -10,5 +10,8 @@ CACHE_REDIS_URL=redis://redis/3?socket_connect_timeout=2
 KAFKA_BOOTSTRAP_SERVERS=["kafka:9092"]
 KAFKA_TOPIC_PARTITIONS_SES_EVENT=1
 KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT=1
+JWT_SECRET_KEY=change-me-to-strong-random-secret
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRES_SECONDS=3600
 # not represented in settings
 SQL_TEMPLATES_DIR=/app/src/templates/sql/
