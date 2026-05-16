@@ -33,6 +33,11 @@ def _run_command_container(service, command):
         local(f'docker-compose run --rm --service-ports {service} bash -c "{command}"')
 
 
+def deps():
+    base()
+    local('docker-compose up -d postgres clickhouse redis kafka')
+
+
 def run():
     _run_command_container(BASE_SERVICE_NAME, 'python manage.py runserver')
 
@@ -72,7 +77,7 @@ def execute(command, service=BASE_SERVICE_NAME):
 def linters(service=BASE_SERVICE_NAME):
     _run_command_container(
         service,
-        "(cd .. && ruff . --config ruff.toml --fix && echo 'Ruff check completed'); "
+        "(cd .. && ruff check . --config ruff.toml --fix && echo 'Ruff check completed'); "
         "(cd .. && ruff format . --config ruff.toml && echo 'Ruff format completed'); "
         "(cd .. && PYTHONPATH=src lint-imports --config lint-imports.toml && echo 'Import linter completed'); "
         "(cd .. && ty check --config-file ty.toml && echo 'Ty completed'); "

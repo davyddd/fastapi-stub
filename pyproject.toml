@@ -35,7 +35,7 @@ dev = [
     "ipdb==0.13.9",
     "ipython==8.3.0",
     "ty==0.0.15",
-    "ruff==0.1.7",
+    "ruff==0.15.10",
     "import-linter==1.12.1",
     "complexipy==5.2.0",
 ]

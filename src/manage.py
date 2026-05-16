@@ -5,13 +5,13 @@ import re
 
 import typer
 import uvicorn
+from alembic.config import Config
 
 from dddesign.structure.domains.constants import BaseEnum
 
 from config.settings import settings
 
 from alembic import command
-from alembic.config import Config
 
 cli = typer.Typer()
 CPU_COUNT = multiprocessing.cpu_count()

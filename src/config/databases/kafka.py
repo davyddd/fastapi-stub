@@ -8,8 +8,7 @@ from share.kafka.settings import ProducerConfig
 BOOTSTRAP_SERVERS: list[str] = settings.KAFKA_BOOTSTRAP_SERVERS
 
 
-class KafkaTopicName(str, BaseEnum):
-    ...
+class KafkaTopicName(str, BaseEnum): ...
 
 
 class KafkaProducerRepository(BaseKafkaProducerRepository):

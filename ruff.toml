@@ -18,6 +18,15 @@ exclude = [
     "**/scripts/**",
 ]
 
+
+line-length = 128
+target-version = "py312"
+
+[lint]
+preview = true
+external = ["complexipy"]
+
+
 # Avialable rules
 # https://docs.astral.sh/ruff/rules/
 select = [
@@ -44,9 +53,11 @@ select = [
     # Pylint
     "PLC0132", "PLC0208", "PLC3002",
     "PLE0307", "PLE0704",
-    "PLR1701", "PLR1714", "PLR2004",
+    "SIM101", "PLR1714", "PLR2004",
     "PLW0406", "PLW0711",
 ]
+
+
 # Conflict rules with format mode (black tool)
 # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
 ignore = [
@@ -60,25 +71,21 @@ ignore = [
     "Q000", "Q001", "Q002", "Q003",
     # flake8-todos
     "TD003",
+    "TRY201", "TRY004",
+    "RUF012",
+    "PLW1508"
 ]
-
-line-length = 128
-
-
-[extend-per-file-ignores]
-"__init__.py" = ["F401"]
-"manage.py" = ["INP001"]
-"src/scripts/*.py" = ["T201", "INP001", "E501"]
-
-
-[lint]
-preview = true
-
 
 [format]
 quote-style = "single"
 indent-style = "space"
-skip-magic-trailing-comma = true
+skip-magic-trailing-comma = false
+
+
+[lint.extend-per-file-ignores]
+"__init__.py" = ["F401"]
+"manage.py" = ["INP001"]
+"src/scripts/*.py" = ["T201", "INP001", "E501"]
 
 
 [lint.isort]
