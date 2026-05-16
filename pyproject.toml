@@ -10,7 +10,7 @@ dependencies = [
     "typer==0.21.1",
     "pydantic[email]==2.12.5",
     "pydantic-settings==2.6.0",
-    "dddesign==1.1.11",
+    "dddesign==2.0.0",
     "sentry-sdk[fastapi]==2.17.0",
     "psycopg[binary]==3.2.3",
     "sqlmodel==0.0.22",
@@ -27,6 +27,7 @@ dependencies = [
     "redis==6.4.0",
     "aiokafka==0.13.0",
     "python-multipart==0.0.22",
+    "msgpack>=1.0.0",
 ]
 
 [dependency-groups]

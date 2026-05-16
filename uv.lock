@@ -294,7 +294,7 @@ wheels = [
 
 [[package]]
 name = "dddesign"
-version = "1.1.11"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
@@ -302,9 +302,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "setuptools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/09/95/4cda7364b750fd082be2cfeeb1976c7c49bace52fe10a511a3447f5ebebc/dddesign-1.1.11.tar.gz", hash = "sha256:9adc402ad8e0b124ae86476a282c4606b2af9cfe687feafe7cc75049562869fa", size = 19865, upload-time = "2026-03-15T18:20:47.107Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/db/22/2cc8c29214fe83eb8bf9e4312fbdcba70b76d7b6e09acb5ceb23a18ae645/dddesign-2.0.0.tar.gz", hash = "sha256:baf4088382dae49bf64919f01ff3bd7867aac9a9c048215bf3fbe2bacb2bf51e", size = 20062, upload-time = "2026-05-16T13:45:55.493Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/85/b9f4fcd735c1f07478723dd12dd8d8fd93202ca31281f57588cbf4485aa8/dddesign-1.1.11-py3-none-any.whl", hash = "sha256:306bb913832063f68d73abba06bafa0ed961d539bafb789015cd37595499aea9", size = 28824, upload-time = "2026-03-15T18:20:45.814Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/50/5262473c959659e8a39c215f6d6d201d91a8c045e165e8e05656994ec878/dddesign-2.0.0-py3-none-any.whl", hash = "sha256:16584cd5659bf5099e46def943d147bea2b6830c9c0b256a2c91fa7370883497", size = 29025, upload-time = "2026-05-16T13:45:53.94Z" },
 ]
 
 [[package]]
@@ -693,6 +693,23 @@ wheels = [
 ]
 
 [[package]]
+name = "msgpack"
+version = "1.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/f2/bfb55a6236ed8725a96b0aa3acbd0ec17588e6a2c3b62a93eb513ed8783f/msgpack-1.1.2.tar.gz", hash = "sha256:3b60763c1373dd60f398488069bcdc703cd08a711477b5d480eecc9f9626f47e", size = 173581, upload-time = "2025-10-08T09:15:56.596Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ad/bd/8b0d01c756203fbab65d265859749860682ccd2a59594609aeec3a144efa/msgpack-1.1.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:70a0dff9d1f8da25179ffcf880e10cf1aad55fdb63cd59c9a49a1b82290062aa", size = 81939, upload-time = "2025-10-08T09:15:01.472Z" },
+    { url = "https://files.pythonhosted.org/packages/34/68/ba4f155f793a74c1483d4bdef136e1023f7bcba557f0db4ef3db3c665cf1/msgpack-1.1.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:446abdd8b94b55c800ac34b102dffd2f6aa0ce643c55dfc017ad89347db3dbdb", size = 85064, upload-time = "2025-10-08T09:15:03.764Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/60/a064b0345fc36c4c3d2c743c82d9100c40388d77f0b48b2f04d6041dbec1/msgpack-1.1.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c63eea553c69ab05b6747901b97d620bb2a690633c77f23feb0c6a947a8a7b8f", size = 417131, upload-time = "2025-10-08T09:15:05.136Z" },
+    { url = "https://files.pythonhosted.org/packages/65/92/a5100f7185a800a5d29f8d14041f61475b9de465ffcc0f3b9fba606e4505/msgpack-1.1.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:372839311ccf6bdaf39b00b61288e0557916c3729529b301c52c2d88842add42", size = 427556, upload-time = "2025-10-08T09:15:06.837Z" },
+    { url = "https://files.pythonhosted.org/packages/f5/87/ffe21d1bf7d9991354ad93949286f643b2bb6ddbeab66373922b44c3b8cc/msgpack-1.1.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:2929af52106ca73fcb28576218476ffbb531a036c2adbcf54a3664de124303e9", size = 404920, upload-time = "2025-10-08T09:15:08.179Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/41/8543ed2b8604f7c0d89ce066f42007faac1eaa7d79a81555f206a5cdb889/msgpack-1.1.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:be52a8fc79e45b0364210eef5234a7cf8d330836d0a64dfbb878efa903d84620", size = 415013, upload-time = "2025-10-08T09:15:09.83Z" },
+    { url = "https://files.pythonhosted.org/packages/41/0d/2ddfaa8b7e1cee6c490d46cb0a39742b19e2481600a7a0e96537e9c22f43/msgpack-1.1.2-cp312-cp312-win32.whl", hash = "sha256:1fff3d825d7859ac888b0fbda39a42d59193543920eda9d9bea44d958a878029", size = 65096, upload-time = "2025-10-08T09:15:11.11Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/ec/d431eb7941fb55a31dd6ca3404d41fbb52d99172df2e7707754488390910/msgpack-1.1.2-cp312-cp312-win_amd64.whl", hash = "sha256:1de460f0403172cff81169a30b9a92b260cb809c4cb7e2fc79ae8d0510c78b6b", size = 72708, upload-time = "2025-10-08T09:15:12.554Z" },
+    { url = "https://files.pythonhosted.org/packages/c5/31/5b1a1f70eb0e87d1678e9624908f86317787b536060641d6798e3cf70ace/msgpack-1.1.2-cp312-cp312-win_arm64.whl", hash = "sha256:be5980f3ee0e6bd44f3a9e9dea01054f175b50c3e6cdb692bc9424c0bbb8bf69", size = 64119, upload-time = "2025-10-08T09:15:13.589Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.0"
 source = { registry = "https://pypi.org/simple" }
@@ -748,6 +765,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "httpx" },
     { name = "jinja2" },
+    { name = "msgpack" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic", extra = ["email"] },
     { name = "pydantic-settings" },
@@ -777,13 +795,14 @@ requires-dist = [
     { name = "apscheduler", specifier = "==3.10.4" },
     { name = "clickhouse-connect", specifier = "==0.8.16" },
     { name = "clickhouse-sqlalchemy", specifier = "==0.3.2" },
-    { name = "dddesign", specifier = "==1.1.11" },
+    { name = "dddesign", specifier = "==2.0.0" },
     { name = "ddsql", specifier = "==0.0.2" },
     { name = "ddutils", specifier = "==0.1.6" },
     { name = "dramatiq", extras = ["redis", "watch", "prometheus"], specifier = "==2.0.1" },
     { name = "fastapi", specifier = "==0.118.1" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "jinja2", specifier = "==3.1.6" },
+    { name = "msgpack", specifier = ">=1.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = "==3.2.3" },
     { name = "pydantic", extras = ["email"], specifier = "==2.12.5" },
     { name = "pydantic-settings", specifier = "==2.6.0" },
