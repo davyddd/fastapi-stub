@@ -1,10 +1,10 @@
 import dramatiq
 from dramatiq.brokers.redis import RedisBroker
-from dramatiq.middleware import AgeLimit, AsyncIO, Callbacks, Pipelines, Retries, TimeLimit
-from dramatiq.middleware.prometheus import Prometheus
+from dramatiq.middleware import AgeLimit, AsyncIO, Callbacks, CurrentMessage, Pipelines, Retries, TimeLimit
 from dramatiq.results import Results
 from dramatiq.results.backends.redis import RedisBackend
 
+from config.databases.redis import redis_dramatiq_broker_client, redis_dramatiq_result_client
 from config.databases.services.db_connections_closer import close_db_connections
 from config.logging.configure import configure_logging_handlers
 from config.logging.log_properties import log_properties_registry
@@ -17,18 +17,30 @@ from share.dramatiq.actor_middlewares import (
     TaskLoggingMiddleware,
 )
 from share.dramatiq.facade import BaseDramatiqFacade
+from share.dramatiq.middleware.health_check import HealthCheck
+from share.dramatiq.middleware.prometheus import PrometheusMetrics
 
-result_backend = RedisBackend(url=str(settings.DRAMATIQ_RESULT_BACKEND_REDIS_URL))
+result_backend = RedisBackend(client=redis_dramatiq_result_client)
 result_middleware = Results(
     backend=result_backend,
     result_ttl=10 * 60 * 1000,  # 10 minutes in ms
 )
 
 broker = RedisBroker(
-    url=str(settings.DRAMATIQ_BROKER_REDIS_URL),
-    health_check_interval=30,
+    client=redis_dramatiq_broker_client,
     dead_message_ttl=24 * 60 * 60 * 1000,  # 24 hours in ms
-    middleware=[AsyncIO(), AgeLimit(), TimeLimit(), Callbacks(), Retries(), Pipelines(), Prometheus(), result_middleware],
+    middleware=[
+        AsyncIO(),
+        AgeLimit(),
+        TimeLimit(),
+        Callbacks(),
+        Retries(),
+        CurrentMessage(),
+        Pipelines(),
+        PrometheusMetrics(),
+        HealthCheck(),
+        result_middleware,
+    ],
 )
 
 dramatiq.set_broker(broker)
