@@ -9,7 +9,12 @@ from ddutils.scoped_registry import ScopedRegistry
 
 from config.settings import settings
 
-postgres_engine = create_async_engine(str(settings.POSTGRES_URL), poolclass=NullPool)
+# Disable prepared statements (prepare_threshold=None) because Odyssey connection pooler
+# uses transaction pooling mode with pool_discard=no — prepared statements are bound
+# to a specific backend connection and break when the pooler assigns a different one.
+# Alternative server-side fix: set pool_discard=yes in Odyssey to send DISCARD ALL
+# on connection release, but that adds a roundtrip per transaction.
+postgres_engine = create_async_engine(str(settings.POSTGRES_URL), poolclass=NullPool, connect_args={'prepare_threshold': None})
 
 
 async_postgres_session_maker = async_sessionmaker(
