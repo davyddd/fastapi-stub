@@ -3,7 +3,7 @@ from abc import ABC
 from collections.abc import AsyncIterator
 from dataclasses import asdict
 from logging import getLogger
-from typing import ClassVar, Generic, Protocol, Self, TypeVar, get_args
+from typing import ClassVar, Protocol, Self, TypeVar, get_args
 
 import msgpack
 from aiokafka import AIOKafkaConsumer, TopicPartition
@@ -15,14 +15,10 @@ logger = getLogger(__name__)
 
 class Deserializable(Protocol):
     @classmethod
-    def model_validate(cls, data: dict) -> Self:
-        ...
+    def model_validate(cls, data: dict) -> Self: ...
 
 
-DomainT = TypeVar('DomainT', bound=Deserializable)
-
-
-class BaseKafkaConsumerRepository(ABC, Generic[DomainT]):
+class BaseKafkaConsumerRepository[DomainT: Deserializable](ABC):
     """
     Base async Kafka consumer repository.
 

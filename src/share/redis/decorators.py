@@ -1,12 +1,11 @@
+from collections.abc import Awaitable, Callable
 from functools import wraps
-from typing import Any, Awaitable, Callable, TypeVar
+from typing import Any
 
 from redis.exceptions import RedisError
 
-T = TypeVar('T')
 
-
-def suppress_redis_errors(func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T | None]]:
+def suppress_redis_errors[T](func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T | None]]:
     """Decorator to suppress Redis exceptions and return None on failure."""
 
     @wraps(func)

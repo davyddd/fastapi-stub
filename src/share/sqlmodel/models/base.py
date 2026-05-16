@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Generic, Self, Type, TypeVar, cast
+from typing import Any, ClassVar, Self, TypeVar, cast
 
 from pydantic import BaseModel
 from sqlalchemy.orm import declared_attr
@@ -6,8 +6,6 @@ from sqlmodel import MetaData, SQLModel
 from sqlmodel.main import SQLModelMetaclass
 
 from ddutils.convertors import convert_camel_case_to_snake_case
-
-EntityT = TypeVar('EntityT', bound=BaseModel)
 
 # https://alembic.sqlalchemy.org/en/latest/naming.html
 NAMING_CONVENTION = {
@@ -27,14 +25,14 @@ class BaseSQLModelMeta(SQLModelMetaclass):
     def __new__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any], **kwargs: Any) -> Any:
         new_cls = super().__new__(cls, name, bases, namespace, **kwargs)
         if kwargs.get('table') and not hasattr(new_cls, '_entity_class'):
-            raise TypeError(f'{name} must specify entity type: ' f'class {name}(BaseSQLModel[YourEntity], table=True)')
+            raise TypeError(f'{name} must specify entity type: class {name}(BaseSQLModel[YourEntity], table=True)')
         return new_cls
 
 
-class BaseSQLModel(SQLModel, Generic[EntityT], metaclass=BaseSQLModelMeta):
+class BaseSQLModel[EntityT: BaseModel](SQLModel, metaclass=BaseSQLModelMeta):
     metadata = metadata
 
-    _entity_class: ClassVar[Type[BaseModel]]
+    _entity_class: ClassVar[type[BaseModel]]
 
     @declared_attr  # type: ignore
     def __tablename__(cls) -> str:  # noqa: N805
@@ -48,7 +46,7 @@ class BaseSQLModel(SQLModel, Generic[EntityT], metaclass=BaseSQLModelMeta):
 
     def to_entity(self) -> EntityT:
         data = {field: getattr(self, field) for field in self._entity_class.model_fields if hasattr(self, field)}
-        return cast(EntityT, self._entity_class(**data))
+        return cast('EntityT', self._entity_class(**data))
 
     @classmethod
     def from_entity(cls, entity: EntityT) -> Self:

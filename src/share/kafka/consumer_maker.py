@@ -1,24 +1,21 @@
-from typing import Any, AsyncIterator, Generic, Protocol, Self
+from collections.abc import AsyncIterator
+from typing import Any, Protocol, Self
 
-from share.kafka.consumer import BaseKafkaConsumerRepository, DomainT
+from share.kafka.consumer import BaseKafkaConsumerRepository, Deserializable
 
 
 class Lockable(Protocol):
-    async def acquire(self) -> None:
-        ...
+    async def acquire(self) -> None: ...
 
-    async def release(self) -> None:
-        ...
+    async def release(self) -> None: ...
 
-    async def extend(self) -> None:
-        ...
+    async def extend(self) -> None: ...
 
 
-class ConsumerStartError(Exception):
-    ...
+class ConsumerStartError(Exception): ...
 
 
-class KafkaConsumerRepositoryMaker(Generic[DomainT]):
+class KafkaConsumerRepositoryMaker[DomainT: Deserializable]:
     """
     Context manager for Kafka consumer with distributed lock.
 

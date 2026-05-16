@@ -1,5 +1,6 @@
 import re
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from starlette.routing import BaseRoute, Route
 from starlette.types import ASGIApp

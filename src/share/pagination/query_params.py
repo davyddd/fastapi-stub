@@ -27,7 +27,7 @@ def _build_ordering_enum(name: str, fields: tuple[str, ...]) -> type[StrEnum]:
         key = field.upper()
         members[key] = field
         members[f'{key}_DESC'] = f'-{field}'
-    return cast(type[StrEnum], StrEnum(f'{name}Ordering', members))
+    return cast('type[StrEnum]', StrEnum(f'{name}Ordering', members))
 
 
 class QueryParams(BaseModel):

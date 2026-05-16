@@ -1,7 +1,7 @@
 from abc import ABC
 from functools import cached_property
 from random import randint
-from typing import ClassVar, Generic, Protocol, Self, TypeVar, cast, get_args
+from typing import ClassVar, Protocol, Self, TypeVar, cast, get_args
 
 from redis.asyncio import Redis
 
@@ -16,22 +16,16 @@ class Serializable(Protocol):
     """Protocol for objects that can be serialized/deserialized to/from JSON."""
 
     @classmethod
-    def model_validate_json(cls, json_data: str | bytes) -> Self:
-        ...
+    def model_validate_json(cls, json_data: str | bytes) -> Self: ...
 
-    def model_dump_json(self) -> str:
-        ...
+    def model_dump_json(self) -> str: ...
 
 
 class Stringable(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
 
 
-DomainT = TypeVar('DomainT', bound=Serializable)
-
-
-class GenericCache(ABC, Generic[DomainT]):
+class GenericCache[DomainT: Serializable](ABC):
     """
     GenericCache: An async generic caching repository for managing domain objects in Redis.
 
@@ -94,17 +88,20 @@ class GenericCache(ABC, Generic[DomainT]):
         """Generates a TTL value with jitter."""
         return self.ttl + randint(-self._jitter, self._jitter)
 
+    async def _get(self, key: str) -> DomainT | None:
+        """Reads and deserializes a domain object by its already-prefixed Redis key."""
+        cached_data = await self.redis_client.get(key)
+        if not cached_data:
+            return None
+        try:
+            return cast('DomainT', self._domain_class.model_validate_json(cached_data))
+        except Exception:  # noqa: BLE001
+            return None
+
     @suppress_redis_errors
     async def get(self, key: Stringable) -> DomainT | None:
         """Retrieves and deserializes a domain object from the cache by its key."""
-        cached_data = await self.redis_client.get(self._generate_key(key))
-        if not cached_data:
-            return None
-
-        try:
-            return cast(DomainT, self._domain_class.model_validate_json(cached_data))
-        except Exception:  # noqa: BLE001
-            return None
+        return await self._get(self._generate_key(key))
 
     @suppress_redis_errors
     async def create(self, key: Stringable, value: DomainT) -> None:
@@ -121,3 +118,21 @@ class GenericCache(ABC, Generic[DomainT]):
     async def delete(self, key: Stringable) -> None:
         """Removes a domain object from the cache by its key."""
         await self.redis_client.delete(self._generate_key(key))
+
+    @suppress_redis_errors
+    async def get_list(self, key_prefix: Stringable) -> list[DomainT]:
+        """Returns all cached domain objects whose keys start with the given prefix."""
+        pattern = f'{self._generate_key(key_prefix)}*'
+        result: list[DomainT] = []
+        async for redis_key in self.redis_client.scan_iter(match=pattern):
+            item = await self._get(redis_key)
+            if item is not None:
+                result.append(item)
+        return result
+
+    @suppress_redis_errors
+    async def delete_by_filters(self, key_prefix: Stringable) -> None:
+        """Removes all cached domain objects whose keys start with the given prefix."""
+        pattern = f'{self._generate_key(key_prefix)}*'
+        async for redis_key in self.redis_client.scan_iter(match=pattern):
+            await self.redis_client.delete(redis_key)

@@ -10,11 +10,9 @@ from share.kafka.settings import ProducerConfig
 
 class Producible(Protocol):
     @property
-    def idempotent_key(self) -> str | None:
-        ...
+    def idempotent_key(self) -> str | None: ...
 
-    def model_dump(self, *args, **kwargs) -> dict:
-        ...
+    def model_dump(self, *args, **kwargs) -> dict: ...
 
 
 class BaseKafkaProducerRepository(ABC):
