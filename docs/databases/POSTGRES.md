@@ -11,6 +11,10 @@ PK field must follow the pattern `{entity}_id` (e.g., `profile_id`, `order_id`) 
 For timestamp fields use `DatesMixin` (adds both `created_at` and `updated_at`),
 or individual mixins `CreatedDateMixin` / `UpdatedDateMixin` if only one field is needed.
 
+**DateTime columns must use `DATETIME_TZ`** (`TIMESTAMP WITH TIME ZONE` in PostgreSQL).
+Import `DATETIME_TZ` from `share.sqlmodel.models.mixins.dates` and pass it via `Field(sa_type=DATETIME_TZ)`.
+This ensures all timestamps are stored with timezone information.
+
 `BaseSQLModel` is generic and provides base implementations of `to_entity()` and `from_entity()`.
 Specify the entity type as a generic parameter: `BaseSQLModel[YourEntity]`.
 Override the methods only when custom mapping is required (e.g., field renaming, value objects wrapping).
@@ -19,12 +23,13 @@ Migrations are auto-generated from model definitions — see [MIGRATIONS.md](./M
 
 **Example:**
 ```python
+from datetime import datetime
 from uuid import UUID
 
 from sqlmodel import Field
 
 from share.sqlmodel.models.base import BaseSQLModel
-from share.sqlmodel.models.mixins.dates import DatesMixin
+from share.sqlmodel.models.mixins.dates import DATETIME_TZ, DatesMixin
 
 from app.profile_context.domains.entities.profile import Profile
 
@@ -34,6 +39,8 @@ class ProfileModel(BaseSQLModel[Profile], DatesMixin, table=True):
     first_name: str | None
     last_name: str | None
     email: str
+    registered_at: datetime = Field(sa_type=DATETIME_TZ)  # type: ignore[arg-type]
+    expires_at: datetime | None = Field(default=None, sa_type=DATETIME_TZ)  # type: ignore[arg-type]
 ```
 
 ### Queries
