@@ -18,7 +18,7 @@ class PostgresAdapter(Adapter):
         async with Atomic() as postgres_session:
             query = await self.get_query()
             result = await postgres_session.execute(text(query))
-            return [dict(zip(result.keys(), row)) for row in result.fetchall()]
+            return [dict(zip(result.keys(), row, strict=False)) for row in result.fetchall()]
 
 
 class ClickhouseAdapter(Adapter):
@@ -28,7 +28,7 @@ class ClickhouseAdapter(Adapter):
         client = await clickhouse_client_registry()
         query = await self.get_query()
         result = await client.query(query)
-        return [dict(zip(result.column_names, row)) for row in result.result_rows]
+        return [dict(zip(result.column_names, row, strict=False)) for row in result.result_rows]
 
 
 class SQL(SQLBase):
