@@ -25,6 +25,7 @@ Service commands are defined in `src/manage.py` (runserver, runworker, runschedu
 - **SQLAlchemy models**: use simple types (`str`, `int`, `bool`, etc.) for columns, not enums or complex types. All validation is done at the code level (entities, services)
 - **Dramatiq tasks**: task name = `<application>_<method>_task`, periodic = `<application>_<method>_periodic_task`. Always read `docs/conventions/BACKGROUND_WORKER.md` before creating tasks
 - **UTC datetime**: use `utc_now()` from `ddutils.datetime_helpers` instead of `datetime.now(tz=timezone.utc)`
+- **String formatting**: use f-strings (`f'value={x!r}'`) instead of `%`-formatting (`'value=%r', x`) — including in `logger.*` calls
 
 ## Documentation
 

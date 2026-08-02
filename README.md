@@ -110,6 +110,7 @@ Commands:
 * `fab shell` - enter shell
 * `fab bash` - enter container's bash
 * `fab kill` - kill all running docker containers
+* `fab remove_none_images` - remove all unused docker images
 
 **Note**: When modifying project dependencies, remember to rebuild the docker image using the `fab build` command.
 
@@ -121,6 +122,7 @@ Project dependencies are orchestrated by [uv](https://docs.astral.sh/uv/).
 * `uv remove <package>` - remove a package
 * `uv self update` - update uv version
 * `uv lock` - update project lockfile
+* `uv sync` - sync dependencies from lockfile
 
 **Note**: Always specify a version for each dependency — either an exact version
 or a version range (e.g., >=1.2.0) — to ensure consistent and predictable builds.
@@ -134,6 +136,7 @@ Tools used to ensure standardization:
 | [ruff](https://docs.astral.sh/ruff/)                           | `ruff.toml`         | linting and formatting        |
 | [ty](https://docs.astral.sh/ty/)                               | `ty.toml`           | type checking                 |
 | [importliner](https://import-linter.readthedocs.io/en/stable/) | `lint-imports.toml` | DDD principles, src integrity |
+| [complexipy](https://github.com/rohaquinlop/complexipy)        | `complexipy.toml`   | cognitive complexity analysis |
 
 Examples of using code-linting tools:
 ```shell
@@ -148,6 +151,9 @@ ty check --config-file ty.toml
 
 # lint imports
 lint-imports --config lint-imports.toml
+
+# cognitive complexity analysis
+complexipy
 ```
 
 ### Debugging
@@ -186,6 +192,8 @@ Application:
 - `redis` — Redis client
 - `aiokafka` — Kafka client
 - `httpx` — HTTP client for external services
+- `typer` — django-like `./manage.py` CLI
+- `sentry-sdk` — performance tracing and error reporting
 - [dddesign](https://github.com/davyddd/dddesign) — DDD building blocks
 - [ddutils](https://github.com/davyddd/ddutils) — shared utilities (convertors, object getters)
 - [ddsql](https://github.com/davyddd/ddsql) — SQL query builder and database adapters
