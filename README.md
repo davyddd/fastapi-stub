@@ -70,6 +70,8 @@ Example:
 
 # migrations
 ./manage.py makemigrations --message 'Added A for B'
+./manage.py checkmigrations
+./manage.py mergemigrations
 ./manage.py migrate
 ./manage.py downgrade
 
@@ -102,6 +104,8 @@ Commands:
 * `fab worker` - run the background worker locally
 * `fab scheduler` - run the task scheduler locally
 * `fab makemigrations` - create migration files
+* `fab checkmigrations` - verify that migration files apply cleanly and fully reflect the models
+* `fab mergemigrations` - create an empty merge revision that joins diverging migration heads
 * `fab migrate` - apply migrations
 * `fab shell` - enter shell
 * `fab bash` - enter container's bash

@@ -66,6 +66,14 @@ def migrate(service=BASE_SERVICE_NAME, db='postgres'):
     _run_command_container(service, f'python manage.py migrate --db {db}')
 
 
+def mergemigrations(service=BASE_SERVICE_NAME, message='merge heads', db='postgres'):
+    _run_command_container(service, f'python manage.py mergemigrations --message "{message}" --db {db}')
+
+
+def checkmigrations(service=BASE_SERVICE_NAME, db='postgres'):
+    _run_command_container(service, f'python manage.py checkmigrations --db {db}')
+
+
 def tests(service=BASE_SERVICE_NAME):
     _run_command_container(service, 'pytest')
 

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import asyncio
 import code
 import multiprocessing
 import os
@@ -6,6 +9,10 @@ import re
 import typer
 import uvicorn
 from alembic.config import Config
+from alembic.runtime.migration import MigrationContext
+from alembic.script import ScriptDirectory
+from alembic.util import CommandError
+from sqlalchemy import create_engine, inspect
 
 from dddesign.structure.domains.constants import BaseEnum
 
@@ -87,6 +94,59 @@ def makemigrations(message: str = 'Auto-generated migration', db: str = Database
     db = Database(db)
     config = get_alembic_config(db=db)
     command.revision(config, message=message, autogenerate=db.autogenerate)
+
+
+@cli.command()
+def checkmigrations(db: str = Database.POSTGRES) -> None:
+    """Fail if migration files don't apply cleanly or don't fully reflect the models.
+
+    Alembic autogenerate can only diff models against a live schema (it has no
+    Django-style in-memory replay of migration files), so the files under test
+    are first replayed into the target database — but only if it is completely
+    empty (a CI scratch container). A database with any existing schema that is
+    not at head is refused, never upgraded.
+    """
+    db = Database(db)
+    if not db.autogenerate:
+        typer.echo(f'Database {db.value!r} does not support autogenerate, nothing to check', err=True)
+        raise typer.Exit(code=2)
+
+    config = get_alembic_config(db=db)
+    script_heads = set(ScriptDirectory.from_config(config).get_heads())
+
+    engine = create_engine(db.url)
+    with engine.connect() as connection:
+        current_heads = set(MigrationContext.configure(connection).get_current_heads())
+        is_empty = not inspect(connection).get_table_names()
+    engine.dispose()
+
+    try:
+        if current_heads != script_heads:
+            if not is_empty:
+                typer.echo(
+                    f'Refusing to check: database has existing schema but is not at head '
+                    f'(current={sorted(current_heads)}, head={sorted(script_heads)}). '
+                    f'Point checkmigrations at an empty scratch database.',
+                    err=True,
+                )
+                raise typer.Exit(code=2)
+            command.upgrade(config, 'head')
+        command.check(config)
+    except CommandError as error:
+        typer.echo(str(error), err=True)
+        raise typer.Exit(code=1) from error
+
+
+@cli.command()
+def mergemigrations(revisions: str = '', message: str = 'merge heads', db: str = Database.POSTGRES) -> None:
+    """Create an empty merge revision that joins diverging alembic heads.
+
+    `revisions` is an optional comma-separated list of revision IDs; default merges all current heads.
+    """
+    db = Database(db)
+    config = get_alembic_config(db=db)
+    target: str | list[str] = [r.strip() for r in revisions.split(',') if r.strip()] if revisions else 'heads'
+    command.merge(config, target, message=message)
 
 
 @cli.command()

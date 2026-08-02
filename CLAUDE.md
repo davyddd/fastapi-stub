@@ -8,7 +8,7 @@
 
 ## Commands
 
-Service commands are defined in `src/manage.py` (runserver, runworker, runscheduler, shell, migrate, makemigrations, downgrade).
+Service commands are defined in `src/manage.py` (runserver, runworker, runscheduler, shell, migrate, makemigrations, checkmigrations, mergemigrations, downgrade).
 
 **IMPORTANT:** The project runs entirely in Docker. All commands must be executed inside the application container, not on the host machine. See `fabfile.py` for container management commands.
 
