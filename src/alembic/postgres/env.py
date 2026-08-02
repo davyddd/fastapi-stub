@@ -1,5 +1,6 @@
 import importlib
 import os
+import re
 from logging.config import fileConfig
 
 from alembic import context
@@ -35,6 +36,17 @@ def load_models():
 
 load_models()
 
+# Child partitions of partitioned tables (e.g. sticky_email_settings_model_y2026m07) have no
+# SQLModel of their own — they are created and dropped by a periodic task. Without this filter
+# autogenerate would reflect them as unknown tables and emit drop_table for each.
+PARTITION_TABLE_RE = re.compile(r'.+_y\d{4}m\d{2}$')
+
+
+def include_object(obj, name, type_, reflected, compare_to) -> bool:  # noqa: ARG001
+    if type_ == 'table' and reflected and compare_to is None and PARTITION_TABLE_RE.match(name or ''):
+        return False
+    return True
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -49,7 +61,11 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=config.get_main_option('sqlalchemy.url'), target_metadata=target_metadata, literal_binds=True, compare_type=True
+        url=config.get_main_option('sqlalchemy.url'),
+        target_metadata=target_metadata,
+        literal_binds=True,
+        compare_type=True,
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -67,7 +83,7 @@ def run_migrations_online() -> None:
     connectable = engine_from_config(configuration, prefix='sqlalchemy.', poolclass=pool.NullPool)  # type: ignore
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(connection=connection, target_metadata=target_metadata, include_object=include_object)
 
         with context.begin_transaction():
             context.run_migrations()

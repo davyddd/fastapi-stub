@@ -52,7 +52,12 @@ def run_migrations_online() -> None:
         context.configure(connection=connection, target_metadata=target_metadata, include_object=include_object)
 
         with context.begin_transaction():
-            patch_alembic_version(context)
+            patch_alembic_version(
+                context,
+                cluster='{cluster}',
+                table_path='/clickhouse/tables/{shard}/alembic_version',
+                replica_name='{replica}',
+            )
             context.run_migrations()
 
 
