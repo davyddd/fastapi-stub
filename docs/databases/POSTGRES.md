@@ -11,12 +11,43 @@ PK field must follow the pattern `{entity}_id` (e.g., `profile_id`, `order_id`) 
 For timestamp fields use `DatesMixin` (adds both `created_at` and `updated_at`),
 or individual mixins `CreatedDateMixin` / `UpdatedDateMixin` if only one field is needed.
 
+Project-wide column type helpers live under `share.sqlmodel.models.types.*` — one file per type.
+
 **DateTime columns must use `DATETIME_TZ`** (`TIMESTAMP WITH TIME ZONE` in PostgreSQL).
-Import `DATETIME_TZ` from `share.sqlmodel.models.mixins.dates` and pass it via `Field(sa_type=DATETIME_TZ)`.
+Import `DATETIME_TZ` from `share.sqlmodel.models.types.datetime` and pass it via `Field(sa_type=DATETIME_TZ)`.
 This ensures all timestamps are stored with timezone information.
+
+**JSONB columns must use the `JSONB` helper** from `share.sqlmodel.models.types.json`,
+not the raw `sqlalchemy.dialects.postgresql.JSONB`.
+The shared instance is configured with `none_as_null=True`, so Python `None` is persisted as SQL `NULL`,
+not as the JSON literal `null` (`'null'::jsonb`).
+Without this flag, `instance.field = None` and `.values(field=None)` write JSON null,
+which DataGrip shows as plain `null` (not `<null>`) and which `WHERE field IS NULL` does not match.
+Always pass `nullable=True`/`nullable=False` explicitly on JSONB columns to mirror the type annotation
+(`dict | None` → `nullable=True`, `dict` → `nullable=False`) and pair the usage with `# type: ignore[arg-type]`,
+the same pattern used for `DATETIME_TZ`.
+
+```python
+from share.sqlmodel.models.types.json import JSONB
+
+class CampaignModel(BaseSQLModel[Campaign], DatesMixin, table=True):
+    sequence_plan: dict | None = Field(default=None, sa_type=JSONB, nullable=True)  # type: ignore[arg-type]
+    stop_events: list = Field(default_factory=list, sa_type=JSONB, nullable=False)  # type: ignore[arg-type]
+```
+
+**Foreign keys must not cross context boundaries.** `Field(foreign_key='<table>.<column>')`
+is only allowed when the referenced table lives in the same `<context>_context` package as the
+declaring model. Cross-context references stay as bare-UUID columns (e.g. `project_id: UUID`)
+with no `foreign_key=` argument; referential integrity is enforced at the application layer.
+This mirrors the Python-level rule from [IMPORTS.md](../conventions/IMPORTS.md) (contexts must
+not import each other) at the database level, so each context keeps its schema independent and
+can later be extracted into a separate service without DDL surgery.
 
 `BaseSQLModel` is generic and provides base implementations of `to_entity()` and `from_entity()`.
 Specify the entity type as a generic parameter: `BaseSQLModel[YourEntity]`.
+`to_entity(**extra_fields)` forwards extra keyword arguments into the entity — use it for
+entity fields that are not model columns (e.g. a computed SELECT expression):
+`instance.to_entity(state=state)` for rows shaped as `(instance, state)`.
 Override the methods only when custom mapping is required (e.g., field renaming, value objects wrapping).
 
 Migrations are auto-generated from model definitions — see [MIGRATIONS.md](./MIGRATIONS.md).
@@ -29,7 +60,8 @@ from uuid import UUID
 from sqlmodel import Field
 
 from share.sqlmodel.models.base import BaseSQLModel
-from share.sqlmodel.models.mixins.dates import DATETIME_TZ, DatesMixin
+from share.sqlmodel.models.mixins.dates import DatesMixin
+from share.sqlmodel.models.types.datetime import DATETIME_TZ
 
 from app.profile_context.domains.entities.profile import Profile
 

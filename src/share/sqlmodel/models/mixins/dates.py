@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import func
 from sqlmodel import Field
 
-DATETIME_TZ = DateTime(timezone=True)
+from share.sqlmodel.models.types.datetime import DATETIME_TZ
 
 
 class UpdatedDateMixin:

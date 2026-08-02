@@ -44,9 +44,11 @@ class BaseSQLModel[EntityT: BaseModel](SQLModel, metaclass=BaseSQLModelMeta):
             result._entity_class = params
         return result
 
-    def to_entity(self) -> EntityT:
+    def to_entity(self, **extra_fields: Any) -> EntityT:
+        """Entity from the model row; `extra_fields` carries entity fields that are not
+        model columns (e.g. computed SELECT expressions like a derived `state`)."""
         data = {field: getattr(self, field) for field in self._entity_class.model_fields if hasattr(self, field)}
-        return cast('EntityT', self._entity_class(**data))
+        return cast('EntityT', self._entity_class(**{**data, **extra_fields}))
 
     @classmethod
     def from_entity(cls, entity: EntityT) -> Self:
