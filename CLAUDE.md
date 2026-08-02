@@ -56,4 +56,5 @@ Service commands are defined in `src/manage.py` (runserver, runworker, runschedu
 - `docs/conventions/IMPORTS.md`
 - `docs/conventions/BACKGROUND_WORKER.md`
 - `docs/conventions/PAGINATION.md`
+- `docs/conventions/FILTERING.md`
 - `docs/conventions/LOGGING.md`

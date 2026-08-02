@@ -1,2 +1,2 @@
-from share.pagination.query_params import QueryParams, SearchType
-from share.pagination.response import PaginatedResponse
+from share.pagination.query_params import QueryParams
+from share.pagination.response import PaginatedResponse, Pagination
