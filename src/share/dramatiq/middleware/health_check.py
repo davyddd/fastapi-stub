@@ -8,7 +8,7 @@ import os
 import tempfile
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from threading import Thread
+from threading import Event, Thread
 
 from dramatiq.asyncio import get_event_loop_thread
 from dramatiq.logging import get_logger
@@ -21,12 +21,17 @@ HEALTH_STALE_THRESHOLD = int(os.getenv('DRAMATIQ_HEALTH_STALE_THRESHOLD', '60'))
 
 os.makedirs(HEALTH_DIR, exist_ok=True)
 
+_shutting_down = Event()
+
 
 class HealthCheck(Middleware):
     def after_worker_boot(self, broker, worker):  # noqa: ARG002
         pid = os.getpid()
         thread = Thread(target=_health_pinger, args=(pid, worker), daemon=True)
         thread.start()
+
+    def before_worker_shutdown(self, broker, worker):  # noqa: ARG002
+        _shutting_down.set()
 
     def after_worker_shutdown(self, broker, worker):  # noqa: ARG002
         pid = os.getpid()
@@ -47,9 +52,8 @@ def _health_pinger(pid: int, worker):
     logger = get_logger(__name__, f'HealthPinger({pid})')
     path = os.path.join(HEALTH_DIR, f'worker-{pid}')
 
-    while True:
-        time.sleep(HEALTH_PING_INTERVAL)
-
+    # `wait` returns True when shutdown is signalled, so we exit before logging dead threads torn down by SIGTERM.
+    while not _shutting_down.wait(HEALTH_PING_INTERVAL):
         # Check 1: all WorkerThreads alive
         dead_threads = [t for t in worker.workers if not t.is_alive()]
         if dead_threads:
