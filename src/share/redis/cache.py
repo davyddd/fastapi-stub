@@ -1,3 +1,4 @@
+import asyncio
 from abc import ABC
 from functools import cached_property
 from random import randint
@@ -102,6 +103,22 @@ class GenericCache[DomainT: Serializable](ABC):
     async def get(self, key: Stringable) -> DomainT | None:
         """Retrieves and deserializes a domain object from the cache by its key."""
         return await self._get(self._generate_key(key))
+
+    async def get_with_retries(self, key: Stringable, *, attempts: int = 4, delay_seconds: float = 1.0) -> DomainT | None:
+        """`get`, retried across a few seconds: the read of a just-scheduled run by its task.
+
+        `get` swallows Redis errors into "not found", and a worker that has just been reloaded
+        can fail its first read on a stale connection, which left a fresh run `pending` forever
+        while the page kept polling it (local, 2026-09-24). A few retries ride out the dropped
+        connection; they cannot make an expired entry reappear.
+        """
+        for attempt in range(attempts):
+            value = await self.get(key)
+            if value is not None:
+                return value
+            if attempt < attempts - 1:
+                await asyncio.sleep(delay_seconds)
+        return None
 
     @suppress_redis_errors
     async def create(self, key: Stringable, value: DomainT) -> None:
