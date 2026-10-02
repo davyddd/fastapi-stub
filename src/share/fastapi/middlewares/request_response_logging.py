@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Iterable
 
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
@@ -55,21 +56,40 @@ class RequestResponseLoggingMiddleware:
         }
 
         request_body, receive = await self._observe_request_data(http_method, receive)
-        logger.info(self._get_log(LogType.REQUEST, base_log, message_template, request_body))
+        request_content_type = self._get_content_type(scope.get('headers', []))
+        logger.info(self._get_log(LogType.REQUEST, base_log, message_template, request_body, request_content_type))
 
         try:
-            response_body, status_code = await self._observe_response_data(scope, receive, send)
+            response_body, status_code, response_content_type = await self._observe_response_data(scope, receive, send)
         except Exception:
             logger.exception(self._get_log(LogType.RESPONSE, base_log, message_template, status_code=500))
             raise
-        logger.info(self._get_log(LogType.RESPONSE, base_log, message_template, response_body, status_code=status_code))
+        logger.info(
+            self._get_log(
+                LogType.RESPONSE, base_log, message_template, response_body, response_content_type, status_code=status_code
+            )
+        )
 
     @staticmethod
-    def _get_log(log_type: LogType, base_log: dict, message_template: str, body: bytes = b'', **kwargs) -> dict:
+    def _get_log(
+        log_type: LogType,
+        base_log: dict,
+        message_template: str,
+        body: bytes = b'',
+        content_type: str | None = None,
+        **kwargs,
+    ) -> dict:
         log: dict = {**base_log, 'message': message_template.format(log_type=log_type), 'log_type': log_type, **kwargs}
         if body:
-            log[log_type.data_field] = format_body(body)
+            log[log_type.data_field] = format_body(body, content_type)
         return log
+
+    @staticmethod
+    def _get_content_type(headers: Iterable[tuple[bytes, bytes]]) -> str | None:
+        for name, value in headers:
+            if name.lower() == b'content-type':
+                return value.decode('latin-1')
+        return None
 
     @staticmethod
     async def _observe_request_data(http_method: str, receive: Receive) -> tuple[bytes, Receive]:
@@ -95,17 +115,19 @@ class RequestResponseLoggingMiddleware:
 
         return body, receive_wrapper
 
-    async def _observe_response_data(self, scope: Scope, receive: Receive, send: Send) -> tuple[bytes, int | None]:
+    async def _observe_response_data(self, scope: Scope, receive: Receive, send: Send) -> tuple[bytes, int | None, str | None]:
         status_code: int | None = None
+        content_type: str | None = None
         response_body_parts: list[bytes] = []
 
         async def send_wrapper(message: Message):
-            nonlocal status_code
+            nonlocal status_code, content_type
             if message['type'] == 'http.response.start':
                 status_code = message.get('status')
+                content_type = self._get_content_type(message.get('headers', []))
             elif message['type'] == 'http.response.body':
                 response_body_parts.append(message.get('body', b''))
             await send(message)
 
         await self.app(scope, receive, send_wrapper)
-        return b''.join(response_body_parts), status_code
+        return b''.join(response_body_parts), status_code, content_type

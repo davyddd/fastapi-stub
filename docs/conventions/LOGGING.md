@@ -47,11 +47,12 @@ HTTP Request
 - `log_properties_registry` is passed explicitly via constructor
 
 **RequestResponseLoggingMiddleware** (`share.fastapi.middlewares`) — logs incoming requests and outgoing responses.
-- `REQUEST` — method, URL, url_mask, body (for POST/PUT/PATCH)
-- `RESPONSE` — method, URL, url_mask, status_code, body
+- `REQUEST` — method, URL, url_mask, body as `request_data` (for POST/PUT/PATCH)
+- `RESPONSE` — method, URL, url_mask, status_code, body as `response_data`
 - Skips OPTIONS requests
+- `request_data` / `response_data` are always objects (the ES field is `flattened`). Body content is logged only for JSON media types (`application/json`, `*+json`): a JSON object as-is, an array as `{"items": [...]}`, a scalar as `{"raw": ...}`. Any other body (HTML, form data, CSV, binary, malformed JSON) is logged as `{"content_type": "<media type>", "size": <bytes>}`
 - URL masking: `UrlMaskResolver` (trie-based) converts URLs to masks based on registered FastAPI routes (`/projects/abc-123/campaigns/def-456` -> `/projects/<project_id>/campaigns/<campaign_id>`)
-- Body size limited by `MAX_BODY_LOG_SIZE` (default 1 MB). Bodies exceeding the limit are replaced with `<body too large: X.XMB>`
+- Body size limited by `MAX_BODY_LOG_SIZE` (default 1 MB). Bodies exceeding the limit are logged as the same `{"content_type", "size"}` object
 
 **Example JSON log (REQUEST):**
 
