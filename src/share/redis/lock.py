@@ -47,7 +47,12 @@ class RedisLock:
             await self.lock.release()
 
     async def extend(self) -> None:
-        await self.lock.extend(self.timeout)
+        # `replace_ttl=True` because every caller means this as a heartbeat: the lock should
+        # outlive the holder by `timeout`, counted from now. redis-py's default ADDS to the
+        # remaining TTL, so a long-lived holder beating steadily would push the expiry further
+        # out with every beat — and a lock whose holder is killed would then sit unreleased for
+        # as long as it had been beating.
+        await self.lock.extend(self.timeout, replace_ttl=True)
 
     async def __aenter__(self) -> Self:
         await self.acquire()
