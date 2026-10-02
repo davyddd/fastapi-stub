@@ -5,17 +5,11 @@ from dramatiq.results import Results
 from dramatiq.results.backends.redis import RedisBackend
 
 from config.databases.redis import redis_dramatiq_broker_client, redis_dramatiq_result_client
-from config.databases.services.db_connections_closer import close_db_connections
 from config.logging.configure import configure_logging_handlers
 from config.logging.log_properties import log_properties_registry
 from config.settings import settings
 
-from share.dramatiq.actor_middlewares import (
-    CloseDBConnectionsMiddleware,
-    LogPropertiesManagerMiddleware,
-    SentryTagsMiddleware,
-    TaskLoggingMiddleware,
-)
+from share.dramatiq.actor_middlewares import LogPropertiesManagerMiddleware, SentryTagsMiddleware, TaskLoggingMiddleware
 from share.dramatiq.facade import BaseDramatiqFacade
 from share.dramatiq.middleware.health_check import HealthCheck
 from share.dramatiq.middleware.prometheus import PrometheusMetrics
@@ -53,7 +47,6 @@ class DramatiqFacade(BaseDramatiqFacade):
         LogPropertiesManagerMiddleware(log_properties_registry),
         SentryTagsMiddleware(log_properties_registry),
         TaskLoggingMiddleware(),
-        CloseDBConnectionsMiddleware(close_db_connections),
     )
 
 

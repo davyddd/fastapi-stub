@@ -1,4 +1,3 @@
-from .db_connection_closer import CloseDBConnectionsMiddleware
 from .log_properties_manager import LogPropertiesManagerMiddleware
 from .sentry_tags import SentryTagsMiddleware
 from .task_logging import TaskLoggingMiddleware

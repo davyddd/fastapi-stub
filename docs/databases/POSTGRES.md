@@ -172,7 +172,17 @@ As shown above, all operations use `Atomic` context manager from `config.databas
 
 `Atomic` supports nested calls — if a transaction is already active,
 it reuses the existing session without starting a new transaction.
-The outermost `Atomic` block controls the commit/rollback.
+The outermost `Atomic` block controls the commit/rollback and, on exit, closes the session:
+nothing outlives the block, there is no cleanup to do elsewhere.
+
+The session is bound to `asyncio.current_task()`, so an `Atomic` inside a coroutine spawned via
+`asyncio.gather` or `TaskGroup` **does not join the caller's transaction** — it gets its own session
+and transaction, committed independently. Keep concurrent children read-only or make each child's
+write self-contained.
+
+Connections come from a client-side pool in front of Odyssey (`POOL_*` constants in
+`config.databases.postgres`): a transaction leases a connection and returns it on commit/rollback,
+the TCP connection stays open for the next one.
 
 `Atomic` can be used at the Application layer to achieve atomicity across multiple Applications.
 This is allowed to keep Repositories simple — they work with single Entities, not Aggregates for state mutations.

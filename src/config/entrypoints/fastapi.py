@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from dddesign.structure.domains.errors import BaseError, CollectionError
 
-from config.databases.services.db_connections_closer import close_db_connections
 from config.entrypoints.dramatiq import dramatiq_facade_impl
 from config.logging.configure import configure_logging_handlers
 from config.logging.log_properties import log_properties_registry
@@ -17,12 +16,7 @@ from share.fastapi.exception_handlers import (
     handle_http_exception,
     handle_request_validation_error,
 )
-from share.fastapi.middlewares import (
-    DBConnectionsCloserMiddleware,
-    LogPropertiesManagerMiddleware,
-    RequestResponseLoggingMiddleware,
-    SentryTagsMiddleware,
-)
+from share.fastapi.middlewares import LogPropertiesManagerMiddleware, RequestResponseLoggingMiddleware, SentryTagsMiddleware
 
 app = FastAPI(title=settings.PROJECT_NAME, debug=settings.DEBUG, servers=[{'url': settings.SERVER_URL}])
 app.include_router(router)
@@ -38,10 +32,6 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=['*'],
     allow_headers=['*'],
-)
-app.add_middleware(
-    DBConnectionsCloserMiddleware,  # ty: ignore[invalid-argument-type]
-    close_db_connections=close_db_connections,
 )
 app.add_middleware(RequestResponseLoggingMiddleware)  # ty: ignore[invalid-argument-type]
 app.add_middleware(
