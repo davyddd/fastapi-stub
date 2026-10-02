@@ -163,7 +163,7 @@ Request-scoped properties available from anywhere within a request via `log_prop
 
 **Token masking:** JWT tokens are decrypted via `DencryptAccessTokenService`, `secret_key_*` tokens are truncated to the first dot.
 
-**log_properties_registry** — scoped registry bound to `asyncio.current_task()`. Allows retrieving `LogProperties` of the current request from anywhere:
+**log_properties_registry** — scoped registry bound to the execution (HTTP request, actor run), not to a task: the scope key lives in a `ContextVar`, so coroutines spawned inside the request via `asyncio.gather` / `TaskGroup` log with the same `request_id`. Allows retrieving `LogProperties` of the current request from anywhere:
 
 ```python
 from config.logging.log_properties import log_properties_registry
