@@ -24,6 +24,8 @@ def _build_lookup_condition(column: Any, lookup: Lookup, value: Any) -> Any:
         return column.is_(None) if value else column.is_not(None)
     if lookup is Lookup.IN:
         return column.in_(value)
+    if lookup is Lookup.LT:
+        return column < value
     if isinstance(value, list):
         raise ValueError("List values are only allowed with the 'in' lookup")
     return column == value

@@ -9,7 +9,7 @@ a `QueryParams` at the route (see [PAGINATION.md](./PAGINATION.md)).
 
 | Component | Path | Purpose |
 |---|---|---|
-| `Lookup` / `FieldLookups` | `share.sqlmodel.lookups` | Declared lookups for filter fields (`EXACT`, `IN`, `ISNULL`) |
+| `Lookup` / `FieldLookups` | `share.sqlmodel.lookups` | Declared lookups for filter fields (`EXACT`, `IN`, `ISNULL`, `LT`) |
 | `SearchType` | `share.sqlmodel.lookups` | Search type enum (`ILIKE`, `EXACT`) |
 | `FilterParams` | `share.sqlmodel.filter_params` | Query contract of a model: filters, ordering, search, range |
 | `UpdateParams` | `share.sqlmodel.update_params` | Contract of columns a repository allows to update |
@@ -50,6 +50,7 @@ CampaignFilterParams = FilterParams.build(
 |---|---|---|
 | `state: Annotated[State \| None, FieldLookups(Lookup.IN)]` | `state__in: list[State] \| None` | `state IN (...)` |
 | `email: Annotated[str \| None, FieldLookups(Lookup.ISNULL)]` | `email__isnull: bool \| None` | `email IS [NOT] NULL` |
+| `purchased_at: Annotated[datetime \| None, FieldLookups(Lookup.LT)]` | `purchased_at__lt: datetime \| None` | `purchased_at < ...` |
 | `file_type: FileType \| None` (no marker) | `file_type: FileType \| None` | `file_type = ...` |
 
 A field with the marker gets only the listed lookups — add `Lookup.EXACT` explicitly to

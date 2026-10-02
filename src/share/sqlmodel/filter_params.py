@@ -74,7 +74,8 @@ class FilterParams(BaseModel):
 
 def _expand_lookups(field_name: str, field_info: Any) -> dict[str, Any]:
     """One field per declared lookup: EXACT keeps the field as declared; IN becomes
-    `<field>__in: list[...]`; ISNULL becomes `<field>__isnull: bool`."""
+    `<field>__in: list[...]`; ISNULL becomes `<field>__isnull: bool`; LT keeps the
+    declared type under `<field>__lt`."""
     field_lookups = next((meta for meta in field_info.metadata if isinstance(meta, FieldLookups)), None)
     if field_lookups is None:
         return {field_name: (field_info.annotation, field_info.default)}
@@ -88,6 +89,8 @@ def _expand_lookups(field_name: str, field_info: Any) -> dict[str, Any]:
             definitions[f'{field_name}{LOOKUP_SEPARATOR}{Lookup.IN}'] = (list[base_type] | None, None)  # type: ignore[valid-type]
         elif lookup is Lookup.ISNULL:
             definitions[f'{field_name}{LOOKUP_SEPARATOR}{Lookup.ISNULL}'] = (bool | None, None)
+        elif lookup is Lookup.LT:
+            definitions[f'{field_name}{LOOKUP_SEPARATOR}{Lookup.LT}'] = (field_info.annotation, None)
     return definitions
 
 

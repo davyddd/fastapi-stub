@@ -7,6 +7,7 @@ class Lookup(StrEnum):
     EXACT = 'exact'
     IN = 'in'
     ISNULL = 'isnull'
+    LT = 'lt'
 
 
 class SearchType(StrEnum):
@@ -22,7 +23,8 @@ class FieldLookups:
             email: Annotated[str | None, FieldLookups(Lookup.EXACT, Lookup.ISNULL)] = None
 
     `FilterParams.build` expands each declared lookup into its own field
-    (`campaign_id__in: list[CampaignId] | None`, `email__isnull: bool | None`, ...).
+    (`campaign_id__in: list[CampaignId] | None`, `email__isnull: bool | None`,
+    `purchased_at__lt: datetime | None`, ...).
     Fields without the marker allow EXACT only. List values are accepted only
     through an IN lookup — never on the bare field.
     """
