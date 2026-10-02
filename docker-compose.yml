@@ -10,10 +10,14 @@ x-server-template: &server-template
     volumes:
         - .:/app
     depends_on:
-        - postgres
-        - clickhouse
-        - redis
-        - kafka
+        postgres:
+            condition: service_healthy
+        clickhouse:
+            condition: service_healthy
+        redis:
+            condition: service_healthy
+        kafka:
+            condition: service_healthy
 
 services:
     server:
@@ -31,21 +35,40 @@ services:
         command: python manage.py runscheduler
 
     postgres:
-        image: postgres:16.2-alpine
+        image: postgres:17.6-alpine
         ports:
             - 5432:5432
         environment:
             POSTGRES_DB: postgres_db
             POSTGRES_USER: postgres_db_user
             POSTGRES_PASSWORD: postgres_db_passwword
+        volumes:
+            - pg-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres_db_user -d postgres_db"]
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 10s
 
-    zookeeper:
-        image: zookeeper:3.8
+    clickhouse-keeper:
+
+        image: clickhouse/clickhouse-keeper:26.8-alpine
         ports:
-            - 2181:2181
+            - 9181:9181
+        volumes:
+            - ./clickhouse/keeper_config.d:/etc/clickhouse-keeper/keeper_config.d
+            - keeper-data:/var/lib/clickhouse
+            - keeper-extra:/var/lib/clickhouse-keeper
+        healthcheck:
+            test: ["CMD-SHELL", "echo ruok | nc -w 2 127.0.0.1 9181 | grep -q imok"]
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 10s
 
     clickhouse:
-        image: clickhouse/clickhouse-server:25.3-alpine
+        image: clickhouse/clickhouse-server:26.8-alpine
         ports:
             - 8123:8123
         environment:
@@ -55,18 +78,33 @@ services:
             CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
         volumes:
             - ./clickhouse/config.d:/etc/clickhouse-server/config.d
+            - ch-data:/var/lib/clickhouse
         depends_on:
-          - zookeeper
+            clickhouse-keeper:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8123/ping | grep -q Ok"]
+            interval: 5s
+            timeout: 5s
+            retries: 24
+            start_period: 15s
 
     redis:
         image: redis/redis-stack:7.2.0-v13
         ports:
             - 6379:6379
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 5s
 
     kafka-ui:
         image: kafbat/kafka-ui:d285a69
         depends_on:
-            - kafka
+            kafka:
+                condition: service_healthy
         environment:
             - KAFKA_CLUSTERS_0_NAME=local
             - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
@@ -76,6 +114,8 @@ services:
 
     kafka:
         image: bitnamilegacy/kafka:4.0.0
+        volumes:
+            - kafka-data:/bitnami/kafka
         environment:
             - KAFKA_CFG_NODE_ID=0
             - KAFKA_CFG_PROCESS_ROLES=controller,broker
@@ -86,3 +126,16 @@ services:
             - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
             - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
             - KAFKA_CFG_DELETE_TOPIC_ENABLE=true
+        healthcheck:
+            test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
+            interval: 10s
+            timeout: 10s
+            retries: 18
+            start_period: 20s
+
+volumes:
+    pg-data:
+    ch-data:
+    keeper-data:
+    keeper-extra:
+    kafka-data:
