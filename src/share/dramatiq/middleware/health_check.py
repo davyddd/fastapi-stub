@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import contextlib
 import glob
@@ -68,7 +66,7 @@ def _health_pinger(pid: int, worker):
         try:
             future = asyncio.run_coroutine_threadsafe(_ping(), event_loop_thread.loop)
             future.result(timeout=HEALTH_PING_INTERVAL)
-        except (TimeoutError, RuntimeError):
+        except TimeoutError, RuntimeError:
             logger.warning('Event loop ping failed for worker %d', pid)
             continue
 
@@ -88,7 +86,7 @@ def _cleanup_stale_files():
             if now - last_ping > HEALTH_STALE_THRESHOLD:
                 os.remove(path)
                 removed.append(os.path.basename(path))
-        except (ValueError, OSError):
+        except ValueError, OSError:
             os.remove(path)
             removed.append(os.path.basename(path))
     return removed
@@ -113,7 +111,7 @@ def _check_health():
             workers[worker_name] = {'last_ping_age_s': age, 'healthy': healthy}
             if not healthy:
                 errors.append(f'{worker_name}: stale ({age}s)')
-        except (ValueError, OSError):
+        except ValueError, OSError:
             workers[worker_name] = {'healthy': False, 'error': 'unreadable'}
             errors.append(f'{worker_name}: unreadable')
 

@@ -49,5 +49,5 @@ class PaginatedResponse[T](BaseModel):
     meta: Meta
 
     @classmethod
-    def factory(cls, items: list[T], pagination: Pagination) -> 'PaginatedResponse[T]':
+    def factory(cls, items: list[T], pagination: Pagination) -> PaginatedResponse[T]:
         return cls(data=items, meta=Meta(pagination=pagination))

@@ -42,7 +42,7 @@ class BaseKafkaConsumerRepository[DomainT: Deserializable](ABC):
 
     _domain_class: ClassVar[type[Deserializable]]
 
-    def __init_subclass__(cls, **kwargs):  # noqa: complexipy
+    def __init_subclass__(cls, **kwargs):  # complexipy: ignore
         super().__init_subclass__(**kwargs)
 
         domain_class = get_args(cls.__orig_bases__[0])[0]  # ty: ignore[unresolved-attribute]
@@ -133,7 +133,10 @@ class BaseKafkaConsumerRepository[DomainT: Deserializable](ABC):
             {'message': 'KAFKA_CONSUMER: Stopped', 'topic': self.topic, 'partition': self._partition, 'group_id': self.group_id}
         )
 
-    async def get_batches(self, timestamp_threshold_minutes: int | None = None) -> AsyncIterator[tuple[DomainT, ...]]:  # noqa: complexipy
+    async def get_batches(  # complexipy: ignore
+        self,
+        timestamp_threshold_minutes: int | None = None,
+    ) -> AsyncIterator[tuple[DomainT, ...]]:
         """
         Returns an async iterator over batches of domain entities.
 

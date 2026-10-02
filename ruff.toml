@@ -20,11 +20,10 @@ exclude = [
 
 
 line-length = 128
-target-version = "py312"
+target-version = "py314"
 
 [lint]
 preview = true
-external = ["complexipy"]
 
 
 # Avialable rules
@@ -45,7 +44,9 @@ select = [
     "T20",      # flake8-print
     "Q",        # flake8-quotes
     "SIM",      # flake8-simplify
-    "TCH",      # flake8-type-checking
+    # "TCH" (flake8-type-checking) removed: under py314 lazy annotations it flags every
+    # annotation-only import, but pydantic/dddesign/FastAPI/dramatiq evaluate annotations
+    # at runtime, so moving imports into TYPE_CHECKING blocks would break them
     "ARG",      # flake8-unused-arguments
     "TD",       # flake8-todos
     "ERA",      # eradicate

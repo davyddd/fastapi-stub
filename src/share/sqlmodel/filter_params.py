@@ -40,7 +40,7 @@ class FilterParams(BaseModel):
         ordering_fields: tuple[str, ...] | None = None,
         default_ordering: str | None = None,
         search_fields: dict[str, SearchType] | None = None,
-    ) -> type['FilterParams']:
+    ) -> type['FilterParams']:  # noqa: UP037 # quoted so ty treats the dynamic model type as unknown
         if ordering_fields:
             if not default_ordering:
                 raise ValueError('default_ordering is required when ordering_fields is provided')

@@ -2,7 +2,7 @@
 output-format = "concise"
 
 [environment]
-python-version = "3.12"
+python-version = "3.14"
 python = "/usr/local"
 
 [src]

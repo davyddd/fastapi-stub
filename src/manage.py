@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import asyncio
 import code
 import multiprocessing
 import os
@@ -78,7 +77,7 @@ def runscheduler():
 
     try:
         scheduler.start()
-    except (KeyboardInterrupt, SystemExit):
+    except KeyboardInterrupt, SystemExit:
         scheduler.shutdown()
 
 

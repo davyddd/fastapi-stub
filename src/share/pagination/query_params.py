@@ -43,7 +43,7 @@ class QueryParams(BaseModel):
     cursor: str | None = None
 
     @classmethod
-    def build(cls, name: str, filter_params: type[FilterParams]) -> type['QueryParams']:
+    def build(cls, name: str, filter_params: type[FilterParams]) -> type['QueryParams']:  # noqa: UP037 # quoted so ty treats the dynamic model type as unknown
         field_definitions: dict[str, Any] = {
             'filter_params_class': (ClassVar[type[FilterParams]], filter_params),
         }

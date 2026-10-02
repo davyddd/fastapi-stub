@@ -83,7 +83,7 @@ class BaseDramatiqFacade(ABC):
         if not getattr(cls, 'module_pattern', None):
             raise ValueError('`module_pattern` class attribute must be set')
 
-    def get_tasks_modules(self) -> Generator[str, None, None]:
+    def get_tasks_modules(self) -> Generator[str]:
         """
         Scan directories and yield task module paths based on the pattern.
 
@@ -179,7 +179,7 @@ class BaseDramatiqFacade(ABC):
 
         return actor(*serializer.serialized_args, **serializer.serialized_kwargs)
 
-    def get_cron_jobs(self) -> Generator[tuple[str, str, str], None, None]:
+    def get_cron_jobs(self) -> Generator[tuple[str, str, str]]:
         """
         Yield cron job configurations for actors with @cron decorator.
 

@@ -74,7 +74,7 @@ class FilterSet(BaseModel):
                 # simply cannot match this column, so its condition is skipped.
                 try:
                     value = column.type.python_type(self.params.search)
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     continue
                 conditions.append(column == value)
             else:
