@@ -113,6 +113,25 @@ class ProfileRepository(Repository):
             await session.execute(statement)
 ```
 
+**Insert-or-skip (`ON CONFLICT DO NOTHING`).** When the caller must know whether the row was
+actually written — to publish an event, to fall back to an update — read `RETURNING`, never
+`result.rowcount`. Through the async driver an `insert(...).values(...)` reports no row count at
+all (`-1`, which is truthy), on a real insert and on a skipped duplicate alike, so
+`bool(result.rowcount)` says "inserted" every time. `RETURNING` is empty exactly when nothing was
+written. `rowcount` is fine after `UPDATE` / `DELETE`.
+
+**Example:**
+```python
+statement = (
+    insert(TransactionEventModel)
+    .values(**instance.model_dump(exclude={'created_at', 'updated_at'}))
+    .on_conflict_do_nothing()
+    .returning(TransactionEventModel.transaction_event_id)
+)
+result = await session.execute(statement)
+return result.first() is not None
+```
+
 For list endpoints with filtering, search, ordering, and pagination see [PAGINATION.md](../conventions/PAGINATION.md).
 
 For complex queries (joins, aggregations) use raw SQL via `ddsql`. 
