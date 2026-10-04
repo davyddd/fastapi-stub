@@ -33,7 +33,7 @@ Thus, `DeviceInfoApp` can only be called from `ProfileApp`, never directly from 
 ```python
 from dddesign.structure.applications import Application
 
-from config.databases.postgres import Atomic
+from config.databases.postgres import postgres_session_factory
 
 
 class ProfileApp(Application):
@@ -41,7 +41,7 @@ class ProfileApp(Application):
     device_info_app: DeviceInfoApp = device_info_app_impl
 
     async def create(self, data: ProfileDTO) -> Profile:
-        async with Atomic():
+        async with postgres_session_factory():
             profile = await self.repo.create(data)
             await self.device_info_app.create(profile.id, data.device_info)
 

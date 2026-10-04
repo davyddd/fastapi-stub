@@ -85,17 +85,17 @@ from dddesign.structure.infrastructure.repositories import Repository
 from ddutils.datetime_helpers import utc_now
 from sqlmodel import select, update
 
-from config.databases.postgres import Atomic
+from config.databases.postgres import postgres_session_factory
 
 
 class ProfileRepository(Repository):
     async def get(self, profile_id: ProfileId) -> Profile | None:
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             instance = await session.get(ProfileModel, profile_id)
             return instance.to_entity() if instance else None
 
     async def create(self, profile: Profile) -> None:
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             instance = ProfileModel.from_entity(profile)
             session.add(instance)
             await session.flush()
@@ -104,7 +104,7 @@ class ProfileRepository(Repository):
         if not entity.has_changed:
             return
 
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             statement = (
                 update(ProfileModel)
                 .where(ProfileModel.profile_id == entity.profile_id)
@@ -187,23 +187,42 @@ profile_stats_repository_impl = ProfileStatsRepository()
 
 ### Transactions
 
-As shown above, all operations use `Atomic` context manager from `config.databases.postgres`.
+As shown above, all operations use the `postgres_session_factory()` context manager from `config.databases.postgres`: a `ConnectionManagerFactory` from `ddsql.connections` over the per-connection session registries, opening the project `PostgresConnectionManager` (a unit of work).
 
-`Atomic` supports nested calls — if a transaction is already active,
+`postgres_session_factory()` supports nested calls — if a transaction is already active,
 it reuses the existing session without starting a new transaction.
-The outermost `Atomic` block controls the commit/rollback and, on exit, closes the session:
+The outermost `postgres_session_factory()` block controls the commit/rollback and, on exit, closes the session:
 nothing outlives the block, there is no cleanup to do elsewhere.
 
-The session is bound to `asyncio.current_task()`, so an `Atomic` inside a coroutine spawned via
+The session is bound to `asyncio.current_task()`, so an `postgres_session_factory()` inside a coroutine spawned via
 `asyncio.gather` or `TaskGroup` **does not join the caller's transaction** — it gets its own session
 and transaction, committed independently. Keep concurrent children read-only or make each child's
 write self-contained.
+
+### Connections (read replica)
+
+`postgres_session_factory(alias=...)` picks the database like Django's `using`. `PostgresConnectionAlias.PRIMARY` is the default;
+`PostgresConnectionAlias.REPLICA` reads from `POSTGRES_REPLICA_URL` and falls back to `POSTGRES_URL` when it is
+not set, so code written for the replica works locally without one. Each connection has its own engine,
+pool and session registry: a replica block inside a primary block opens a separate session and
+transaction, it does not join the writing one.
+
+```python
+async with postgres_session_factory(alias=PostgresConnectionAlias.REPLICA) as session:
+    result = await session.execute(statement)
+```
+
+Raw SQL picks the database right before executing: `SQL(query).postgres.using(PostgresConnectionAlias.REPLICA).execute()`.
+
+Reading from the replica is a decision of the use case, not of the repository: it is right for reports,
+listings and periodic jobs that tolerate replication lag, and wrong right after a write in the same flow,
+where the replica may not have the row yet. Writes against the replica are rejected by the standby itself.
 
 Connections come from a client-side pool in front of Odyssey (`POOL_*` constants in
 `config.databases.postgres`): a transaction leases a connection and returns it on commit/rollback,
 the TCP connection stays open for the next one.
 
-`Atomic` can be used at the Application layer to achieve atomicity across multiple Applications.
+`postgres_session_factory()` can be used at the Application layer to achieve atomicity across multiple Applications.
 This is allowed to keep Repositories simple — they work with single Entities, not Aggregates for state mutations.
 
 **Example:**
@@ -211,7 +230,7 @@ This is allowed to keep Repositories simple — they work with single Entities, 
 ```python
 from dddesign.structure.applications import Application
 
-from config.databases.postgres import Atomic
+from config.databases.postgres import postgres_session_factory
 
 
 class OrderApp(Application):
@@ -219,7 +238,7 @@ class OrderApp(Application):
     inventory_app: InventoryApp
 
     async def create(self, data: CreateOrderDTO) -> Order:
-        async with Atomic():
+        async with postgres_session_factory():
             order = Order.factory(data)
             await self.payment_app.charge(order.profile_id, order.total)
             await self.inventory_app.reserve(order.items)

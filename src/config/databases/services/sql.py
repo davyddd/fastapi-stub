@@ -7,15 +7,15 @@ from ddsql.serializers.clickhouse import ClickhouseSerializer
 from ddsql.serializers.postgres import PostgresSerializer
 from ddsql.sqlbase import SQLBase
 
-from config.databases.clickhouse import clickhouse_client_registry
-from config.databases.postgres import Atomic
+from config.databases.clickhouse import clickhouse_client_factory
+from config.databases.postgres import postgres_session_factory
 
 
 class PostgresAdapter(Adapter):
     serializer: PostgresSerializer = PostgresSerializer()
 
     async def _execute(self) -> list[dict[str, Any]]:
-        async with Atomic() as postgres_session:
+        async with postgres_session_factory(alias=self.alias) as postgres_session:
             query = await self.get_query()
             result = await postgres_session.execute(text(query))
             return [dict(zip(result.keys(), row, strict=False)) for row in result.fetchall()]
@@ -25,10 +25,10 @@ class ClickhouseAdapter(Adapter):
     serializer: ClickhouseSerializer = ClickhouseSerializer()
 
     async def _execute(self) -> list[dict[str, Any]]:
-        client = await clickhouse_client_registry.set()
-        query = await self.get_query()
-        result = await client.query(query)
-        return [dict(zip(result.column_names, row, strict=False)) for row in result.result_rows]
+        async with clickhouse_client_factory(alias=self.alias) as client:
+            query = await self.get_query()
+            result = await client.query(query)
+            return [dict(zip(result.column_names, row, strict=False)) for row in result.result_rows]
 
 
 class SQL(SQLBase):

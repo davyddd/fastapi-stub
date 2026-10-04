@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     ENVIRONMENT: Environment
 
     POSTGRES_URL: PostgresDsn
+    # read replica; falls back to POSTGRES_URL when not set, so code using the replica works without one
+    POSTGRES_REPLICA_URL: PostgresDsn | None = None
 
     CLICKHOUSE_URL: ClickHouseDsn
 

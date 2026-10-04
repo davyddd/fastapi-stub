@@ -350,15 +350,15 @@ wheels = [
 
 [[package]]
 name = "ddsql"
-version = "0.1.0"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "jinja2" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/75/81/884a0dc8df511230068ac095e2e09c112dc167e4fed4234fd6cef8cba66f/ddsql-0.1.0.tar.gz", hash = "sha256:4a9a1c7619ff8bad7cc48cff267f7870052d2175e9e50fb6ddad4f4f9d695f5e", size = 8672, upload-time = "2026-10-02T18:24:30.232Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f6/a2/329f062487a174a863033d7d095abcb562d095baed75c840bff97643d9bd/ddsql-0.3.0.tar.gz", hash = "sha256:62805ee794d7ad8792081b34dc9b24768789ac156be8f9d43e53316b2fdacf60", size = 10792, upload-time = "2026-10-04T15:02:40.045Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/71/c8/7c70fc6cc20bfe1f6eae82d4529821e0863d2d85ba306cbb6ed02fc52087/ddsql-0.1.0-py3-none-any.whl", hash = "sha256:3f2ef79d8e98894ce48f5f1ae6f3f1b8def833536338ddc5f89dcc19554a2a33", size = 12021, upload-time = "2026-10-02T18:24:29.176Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/c5/0aef6e0ab555976d3083df2ab31e19c1a357d3f6d2b9718ba53d16becadd/ddsql-0.3.0-py3-none-any.whl", hash = "sha256:ae14c41678767c610e51625c18e3e2947774a7c15dd45095a10067e521a20457", size = 14679, upload-time = "2026-10-04T15:02:38.538Z" },
 ]
 
 [[package]]
@@ -885,7 +885,7 @@ requires-dist = [
     { name = "clickhouse-connect", specifier = "==0.15.1" },
     { name = "clickhouse-sqlalchemy", specifier = "==0.3.2" },
     { name = "dddesign", specifier = "==2.1.0" },
-    { name = "ddsql", specifier = "==0.1.0" },
+    { name = "ddsql", specifier = "==0.3.0" },
     { name = "ddutils", specifier = "==0.2.1" },
     { name = "dramatiq", extras = ["redis", "watch", "prometheus"], specifier = "==2.0.1" },
     { name = "fastapi", specifier = "==0.118.1" },

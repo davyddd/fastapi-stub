@@ -20,6 +20,16 @@ Use `serialize_value(...)` in templates.
 | `date` | `'...'::date` | `toDate('...')` |
 | `list`/`tuple` | `(item1, item2)` | `(item1, item2)` |
 
+### Choosing the database
+
+`Adapter.using(...)` lets the repository decide right before executing which database a query goes to;
+without it the connection factory's default applies:
+
+```python
+result = await SQL(query).with_params(...).postgres.execute()                               # PostgresConnectionAlias.PRIMARY
+result = await SQL(query).with_params(...).postgres.using(PostgresConnectionAlias.REPLICA).execute()
+```
+
 ### File Templates
 
 Instead of inline `text`, pass `path` (a `Path`) to a file-based template. The file is checked when the `Query`

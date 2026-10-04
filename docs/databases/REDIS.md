@@ -15,7 +15,7 @@ from redis.asyncio import Redis
 from dddesign.structure.infrastructure.repositories import Repository
 
 from config.databases.redis import redis_client
-from config.databases.postgres import Atomic
+from config.databases.postgres import postgres_session_factory
 from share.redis.cache import GenericCache
 
 from app.profile_context.domains.entities.profile import Profile
@@ -39,7 +39,7 @@ class ProfileRepository(Repository):
             return profile
 
         # Fallback to database
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             instance = await session.get(ProfileModel, profile_id)
             profile = instance.to_entity() if instance else None
 

@@ -79,7 +79,7 @@ and a base statement and get domain-ready results back:
 
 | Parameter | Type | Description |
 |---|---|---|
-| `session` | `AsyncSession` | Required; the surrounding `Atomic()` session |
+| `session` | `AsyncSession` | Required; the surrounding `postgres_session_factory()` session |
 | `model` | `type[SQLModel]` | SQLAlchemy model for column access |
 | `base_statement` | `Select \| Update` | Base statement to extend |
 | `params` | `FilterParams` | The contract instance |
@@ -102,12 +102,12 @@ class CampaignRepository(Repository):
         statement, extra_columns = _build_base_statement()
         statement = statement.where(CampaignModel.project_id == project_id)
 
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             filter_set = FilterSet(
                 session=session, model=CampaignModel, params=params, base_statement=statement, extra_columns=extra_columns
             )
             rows, next_cursor, prev_cursor = await filter_set.select()
-            # Convert inside the session: leaving Atomic commits and expires ORM instances.
+            # Convert inside the session: leaving postgres_session_factory() commits and expires ORM instances.
             # `to_entity(**extra_fields)` forwards computed columns into the entity.
             entities = [instance.to_entity(state=state) for instance, state in rows]
         return entities, next_cursor, prev_cursor
@@ -175,7 +175,7 @@ class TransactionEventRepository(Repository):
     ) -> None:
         base_statement = update(TransactionEventModel).where(TransactionEventModel.project_id == project_id)
 
-        async with Atomic() as session:
+        async with postgres_session_factory() as session:
             filter_set = FilterSet(
                 session=session, model=TransactionEventModel, params=filters, base_statement=base_statement
             )
