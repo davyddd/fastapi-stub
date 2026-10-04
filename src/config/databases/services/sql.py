@@ -25,7 +25,7 @@ class ClickhouseAdapter(Adapter):
     serializer: ClickhouseSerializer = ClickhouseSerializer()
 
     async def _execute(self) -> list[dict[str, Any]]:
-        client = await clickhouse_client_registry()
+        client = await clickhouse_client_registry.set()
         query = await self.get_query()
         result = await client.query(query)
         return [dict(zip(result.column_names, row, strict=False)) for row in result.result_rows]

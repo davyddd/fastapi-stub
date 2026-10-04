@@ -11,8 +11,5 @@ class LogPropertiesManagerMiddleware(BaseActorMiddleware):
         self.log_properties_registry = log_properties_registry
 
     async def __call__(self, call_next: Callable[..., Awaitable[Any]], *args: Any, **kwargs: Any) -> Any:
-        await self.log_properties_registry()
-        try:
+        async with self.log_properties_registry.scope():
             return await call_next(*args, **kwargs)
-        finally:
-            await self.log_properties_registry.clear()

@@ -9,7 +9,12 @@ class CustomJsonFormatter(JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super().add_fields(log_record, record, message_dict)
 
-        log_properties = log_properties_registry.get()
+        try:
+            log_properties = log_properties_registry.get()
+        except RuntimeError:
+            # outside of an execution scope (startup, scheduler): nothing to add
+            return
+
         if log_properties:
             for key, value in flatten_model_dump(log_properties, mode='json', exclude_none=True).items():
                 log_record.setdefault(key, value)

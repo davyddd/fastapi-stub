@@ -6,8 +6,8 @@ from ddutils.scoped_registry import ScopedRegistry
 
 class LogPropertiesManagerMiddleware:
     """
-    Pure ASGI middleware that initializes LogProperties at the start of each HTTP request
-    and clears them after the request is complete.
+    Pure ASGI middleware that enters the LogProperties scope for the duration of each HTTP request:
+    the properties are created on enter and removed when the request is complete.
 
     LogProperties (request_id, headers, duration) become available
     to all loggers during the request via log_properties_registry.
@@ -25,9 +25,6 @@ class LogPropertiesManagerMiddleware:
             await self.app(scope, receive, send)
             return
 
-        try:
-            headers = dict(Headers(scope=scope).items())
-            await self.log_properties_registry(headers=headers)
+        headers = dict(Headers(scope=scope).items())
+        async with self.log_properties_registry.scope(headers=headers):
             await self.app(scope, receive, send)
-        finally:
-            await self.log_properties_registry.clear()

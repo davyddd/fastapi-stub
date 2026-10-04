@@ -42,7 +42,7 @@ HTTP Request
   +- LogProperties cleared
 ```
 
-**LogPropertiesManagerMiddleware** (`share.fastapi.middlewares`) — initializes `LogProperties` at the start of an HTTP request, clears them after completion.
+**LogPropertiesManagerMiddleware** (`share.fastapi.middlewares`) — enters `log_properties_registry.scope(headers=...)` for the duration of an HTTP request: `LogProperties` are created on enter and removed on exit, also on errors.
 - Pure ASGI middleware (not `BaseHTTPMiddleware`) — preserves `asyncio.current_task()` context
 - `log_properties_registry` is passed explicitly via constructor
 
@@ -110,7 +110,7 @@ Actor execution
   +- LogProperties cleared
 ```
 
-**LogPropertiesManagerMiddleware** — initializes `LogProperties` (request_id, duration) for the task lifetime and clears them after. `log_properties_registry` is passed explicitly via constructor.
+**LogPropertiesManagerMiddleware** — enters `log_properties_registry.scope()` for the duration of the actor run: `LogProperties` (request_id, duration) are created on enter and removed on exit. `log_properties_registry` is passed explicitly via constructor.
 
 **TaskLoggingMiddleware** — logs:
 - Task start with parameters (collections are excluded from the log)
@@ -164,7 +164,7 @@ Request-scoped properties available from anywhere within a request via `log_prop
 
 **Token masking:** JWT tokens are decrypted via `DencryptAccessTokenService`, `secret_key_*` tokens are truncated to the first dot.
 
-**log_properties_registry** — scoped registry bound to the execution (HTTP request, actor run), not to a task: the scope key lives in a `ContextVar`, so coroutines spawned inside the request via `asyncio.gather` / `TaskGroup` log with the same `request_id`. Allows retrieving `LogProperties` of the current request from anywhere:
+**log_properties_registry** — a `ScopedRegistry` bound to the execution (HTTP request, actor run), not to a task: its `scope_func` stores the token the registry passes on entering `scope()` in a `ContextVar`, so coroutines spawned inside the request via `asyncio.gather` / `TaskGroup` log with the same `request_id`. Allows retrieving `LogProperties` of the current request from anywhere inside the scope:
 
 ```python
 from config.logging.log_properties import log_properties_registry
@@ -173,3 +173,5 @@ log_properties = log_properties_registry.get()
 if log_properties:
     request_id = log_properties.request_id
 ```
+
+Outside of an execution scope (startup, scheduler) there is no scope key and `get()` raises `RuntimeError`; code that may run there (like the JSON log formatter) catches it.

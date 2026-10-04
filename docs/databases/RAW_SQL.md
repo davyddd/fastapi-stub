@@ -22,12 +22,16 @@ Use `serialize_value(...)` in templates.
 
 ### File Templates
 
-Instead of inline `text`, use `path` for file-based templates.
-Set `SQL_TEMPLATES_DIR` environment variable to the templates directory.
+Instead of inline `text`, pass `path` (a `Path`) to a file-based template. The file is checked when the `Query`
+is created, so a wrong path fails on import. `{% include %}` inside the template resolves relative to the file.
 
 ```python
+from pathlib import Path
+
+SQL_TEMPLATES_DIR = Path(__file__).parent / 'templates' / 'sql'
+
 query = Query(
     model=User,
-    path='users/get_by_id.sql'
+    path=SQL_TEMPLATES_DIR / 'users' / 'get_by_id.sql',
 )
 ```

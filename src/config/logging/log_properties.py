@@ -28,20 +28,21 @@ async def _create_log_properties(**kwargs: Any) -> LogProperties:
     return LogProperties.model_validate(kwargs)
 
 
-_execution_key: ContextVar[object | None] = ContextVar('log_properties_execution_key', default=None)
+_execution_key: ContextVar[str | None] = ContextVar('log_properties_execution_key', default=None)
 
 
-def _execution_scope() -> object:
+def _execution_scope(token: str | None) -> str | None:
     """Scope of one execution (HTTP request, actor run), not of one task.
 
-    The key is set in the execution context on first use and inherited by every coroutine spawned
-    inside it, so a gather/TaskGroup child logs with the request_id of its parent. The registry
-    entry is removed by `LogPropertiesManagerMiddleware.clear()` at the end of the execution.
+    The registry passes a fresh `token` when `scope()` is entered and `None` on reads. The key is stored in the
+    execution context only on enter, so coroutines spawned inside the block (`gather`, `TaskGroup`, `create_task`)
+    inherit it and log with the `request_id` of their parent, while a read outside of a request (a startup log)
+    finds no key and `get()` raises instead of planting a key that every request task would inherit.
     """
     key = _execution_key.get()
-    if key is None:
-        key = object()
-        _execution_key.set(key)
+    if key is None and token is not None:
+        _execution_key.set(token)
+        key = token
     return key
 
 

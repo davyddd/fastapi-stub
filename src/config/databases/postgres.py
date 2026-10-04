@@ -44,37 +44,33 @@ postgres_session_registry: ScopedRegistry[AsyncSession] = ScopedRegistry[AsyncSe
 
 
 class Atomic:
-    """Unit of work. The outermost block owns the transaction and, on exit, removes the task's
-    session from the registry (which closes it), so nothing outlives the block. Nested blocks join."""
+    """Unit of work. The outermost block owns the transaction and the registry scope: on exit it commits or
+    rolls back and leaves the scope, which removes the task's session from the registry and closes it, so
+    nothing outlives the block. Nested blocks join the session and the transaction."""
 
     session: AsyncSession | None
     in_transaction: bool | None
 
     def __init__(self):
+        self._scope = postgres_session_registry.scope()
         self.session = None
         self.in_transaction = None
 
-    async def _initial(self):
-        if self.session is None or self.in_transaction is None:
-            self.session = await postgres_session_registry()
-            self.in_transaction = self.session.in_transaction()
-
     async def __aenter__(self) -> AsyncSession:
-        await self._initial()
+        self.session = await self._scope.__aenter__()
+        self.in_transaction = self.session.in_transaction()
 
         if not self.in_transaction:
-            await self.session.begin()  # type: ignore
+            await self.session.begin()
 
-        return self.session  # type: ignore
+        return self.session
 
-    async def __aexit__(self, exc_type: type[BaseException] | None, exc_value: Exception | None, traceback: Any) -> None:
-        if self.in_transaction:
-            return
-
+    async def __aexit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: Any) -> None:
         try:
-            if exc_type is not None:
-                await self.session.rollback()  # type: ignore
-            else:
-                await self.session.commit()  # type: ignore
+            if self.session is not None and not self.in_transaction:
+                if exc_type is not None:
+                    await self.session.rollback()
+                else:
+                    await self.session.commit()
         finally:
-            await postgres_session_registry.clear()
+            await self._scope.__aexit__(exc_type, exc_value, traceback)
