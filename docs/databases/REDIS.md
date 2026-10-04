@@ -16,7 +16,7 @@ from dddesign.structure.infrastructure.repositories import Repository
 
 from config.databases.redis import redis_client
 from config.databases.postgres import postgres_session_factory
-from share.redis.cache import GenericCache
+from ddredis.cache import GenericCache
 
 from app.profile_context.domains.entities.profile import Profile
 
@@ -61,7 +61,7 @@ Distributed lock for preventing concurrent access.
 ```python
 from config.databases.redis import redis_client
 from share.contextlib import async_suppress
-from share.redis.lock import RedisLock, AlreadyAcquiredError
+from ddredis.lock import AlreadyAcquiredError, RedisLock
 
 
 async with (

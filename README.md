@@ -197,6 +197,7 @@ Application:
 - [dddesign](https://github.com/davyddd/dddesign) — DDD building blocks
 - [ddutils](https://github.com/davyddd/ddutils) — shared utilities (convertors, object getters)
 - [ddsql](https://github.com/davyddd/ddsql) — SQL query builder and database adapters
+- [ddredis](https://github.com/davyddd/ddredis) — Redis cache and distributed lock
 
 ### Databases
 

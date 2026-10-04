@@ -54,7 +54,7 @@ Distributed lock prevents duplicate processing across workers — if a lock is a
 **Example:**
 ```python
 from share.kafka.consumer_maker import KafkaConsumerRepositoryMaker
-from share.redis.lock import RedisLock
+from ddredis.lock import RedisLock
 
 from config.databases.redis import redis_client
 

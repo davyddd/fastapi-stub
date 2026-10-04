@@ -349,6 +349,19 @@ wheels = [
 ]
 
 [[package]]
+name = "ddredis"
+version = "0.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ddutils" },
+    { name = "redis" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c4/d7/85a09b64f08c8ac1fbbeabb7e9e983e6bd22d767d6cf373318f0682c033d/ddredis-0.0.1.tar.gz", hash = "sha256:6c27332492b00bf2132a9aea613b3f6650351e42c383253186d008798a02eebf", size = 6358, upload-time = "2026-10-04T17:51:50.709Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3e/ee/6beea62df10578e4aad58bb8521d490ac26b1c3510d1f0b31ab82868b3ce/ddredis-0.0.1-py3-none-any.whl", hash = "sha256:c5e8b35b2a433e5ed73f2d1b5d21554e0e96b61e55b8d324c1c5fb4578f9b43c", size = 8011, upload-time = "2026-10-04T17:51:49.571Z" },
+]
+
+[[package]]
 name = "ddsql"
 version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -363,11 +376,11 @@ wheels = [
 
 [[package]]
 name = "ddutils"
-version = "0.2.1"
+version = "0.2.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/3b/de/7959131b31184b165497f12ac4f55a23c1b50a0f3c92a97d2ec197919534/ddutils-0.2.1.tar.gz", hash = "sha256:18f2306db5b28f1c23b3b84cc8a94ac3e75e127ba57453de212c071a5fbe40dd", size = 12035, upload-time = "2026-10-04T09:58:53.91Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/20/9f/dfd93317cb6820f6325fe89081db2f4eb047f7d7b71f8ac7bbf00005bd8b/ddutils-0.2.2.tar.gz", hash = "sha256:521e96e5751c07e1fa607d6bb32c1b2320088fd0aeb2ecd21ce8aa7ca2e36c5c", size = 12530, upload-time = "2026-10-04T17:04:15.639Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/21/21/229a53ec0a28b143c0af62d507d526d1a8d38102828c6f8942b10231900b/ddutils-0.2.1-py3-none-any.whl", hash = "sha256:6c8c528d4bffc5d0f81524358ac81ce4837a8fcc1a53969d9d005e82699c6916", size = 15631, upload-time = "2026-10-04T09:58:52.541Z" },
+    { url = "https://files.pythonhosted.org/packages/06/1b/2eea50714c3329f90c3c4722d0b856696dc67963a2148d476c9e75f79cc1/ddutils-0.2.2-py3-none-any.whl", hash = "sha256:ea0d1a33a7f0af79ef3da70868e93ad7cc8a03b2c1e933c873a9b38e27acce9e", size = 16121, upload-time = "2026-10-04T17:04:14.311Z" },
 ]
 
 [[package]]
@@ -848,6 +861,7 @@ dependencies = [
     { name = "clickhouse-connect" },
     { name = "clickhouse-sqlalchemy" },
     { name = "dddesign" },
+    { name = "ddredis" },
     { name = "ddsql" },
     { name = "ddutils" },
     { name = "dramatiq", extra = ["prometheus", "redis", "watch"] },
@@ -885,8 +899,9 @@ requires-dist = [
     { name = "clickhouse-connect", specifier = "==0.15.1" },
     { name = "clickhouse-sqlalchemy", specifier = "==0.3.2" },
     { name = "dddesign", specifier = "==2.1.0" },
+    { name = "ddredis", specifier = "==0.0.1" },
     { name = "ddsql", specifier = "==0.3.0" },
-    { name = "ddutils", specifier = "==0.2.1" },
+    { name = "ddutils", specifier = "==0.2.2" },
     { name = "dramatiq", extras = ["redis", "watch", "prometheus"], specifier = "==2.0.1" },
     { name = "fastapi", specifier = "==0.118.1" },
     { name = "httpx", specifier = "==0.28.1" },
