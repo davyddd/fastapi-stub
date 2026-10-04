@@ -187,7 +187,7 @@ profile_stats_repository_impl = ProfileStatsRepository()
 
 ### Transactions
 
-As shown above, all operations use the `postgres_session_factory()` context manager from `config.databases.postgres`: a `ConnectionManagerFactory` from `ddsql.connections` over the per-connection session registries, opening the project `PostgresConnectionManager` (a unit of work).
+As shown above, all operations use the `postgres_session_factory()` context manager from `config.databases.postgres`: a `ConnectionManagerFactory` from `ddsql.connections` over the per-connection session registries, opening the project `SessionManager` (a unit of work).
 
 `postgres_session_factory()` supports nested calls — if a transaction is already active,
 it reuses the existing session without starting a new transaction.
