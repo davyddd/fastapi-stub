@@ -32,6 +32,7 @@ forbidden_modules = [
     "sqlalchemy",
     "clickhouse_connect",
     "redis",
+    "aerospike_native",
 ]
 ignore_imports = [
     "**.infrastructure.** -> **",

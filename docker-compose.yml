@@ -18,6 +18,8 @@ x-server-template: &server-template
             condition: service_healthy
         kafka:
             condition: service_healthy
+        aerospike:
+            condition: service_healthy
 
 services:
     server:
@@ -100,6 +102,22 @@ services:
             retries: 12
             start_period: 5s
 
+    aerospike:
+        image: aerospike/aerospike-server:8.0.0.10
+        # the image regenerates /etc/aerospike/aerospike.conf on every start, so the config is passed explicitly
+        command: ["--config-file", "/opt/aerospike/etc/aerospike.conf"]
+        ports:
+            - 3000:3000
+        volumes:
+            - ./aerospike/aerospike.conf:/opt/aerospike/etc/aerospike.conf:ro
+            - as-data:/opt/aerospike/data
+        healthcheck:
+            test: ["CMD-SHELL", "asinfo -v status | grep -q ok"]
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 10s
+
     kafka-ui:
         image: kafbat/kafka-ui:d285a69
         depends_on:
@@ -139,3 +157,4 @@ volumes:
     keeper-data:
     keeper-extra:
     kafka-data:
+    as-data:

@@ -8,7 +8,8 @@ CLICKHOUSE_URL=clickhouse+asynch://clickhouse_db_user:clickhouse_db_passwword@cl
 DRAMATIQ_BROKER_REDIS_URL=redis://redis/1
 DRAMATIQ_RESULT_BACKEND_REDIS_URL=redis://redis/2
 CACHE_REDIS_URL=redis://redis/3
-KAFKA_BOOTSTRAP_SERVERS=["kafka:9092"]
+KAFKA_URL=kafka://kafka:9092
+AEROSPIKE_URL=aerospike://aerospike:3000/application_db
 KAFKA_TOPIC_PARTITIONS_SES_EVENT=1
 KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT=1
 

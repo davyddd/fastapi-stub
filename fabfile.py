@@ -35,7 +35,7 @@ def _run_command_container(service, command):
 
 def deps():
     base()
-    local('docker-compose up -d postgres clickhouse redis kafka')
+    local('docker-compose up -d postgres clickhouse redis kafka aerospike')
 
 
 def run():

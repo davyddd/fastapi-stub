@@ -4,13 +4,16 @@ from dramatiq.middleware import AgeLimit, AsyncIO, Callbacks, CurrentMessage, Pi
 from dramatiq.results import Results
 from dramatiq.results.backends.redis import RedisBackend
 
-from config.databases.redis import redis_dramatiq_broker_client, redis_dramatiq_result_client
+from config.databases.aerospike import aerospike_client_factory
+from config.databases.kafka import kafka_producer_factory
+from config.databases.redis import redis_client_factory, redis_dramatiq_broker_client, redis_dramatiq_result_client
 from config.logging.configure import configure_logging_handlers
 from config.logging.log_properties import log_properties_registry
 from config.settings import settings
 
 from share.dramatiq.actor_middlewares import LogPropertiesManagerMiddleware, SentryTagsMiddleware, TaskLoggingMiddleware
 from share.dramatiq.facade import BaseDramatiqFacade
+from share.dramatiq.middleware.async_shutdown import AsyncShutdown
 from share.dramatiq.middleware.health_check import HealthCheck
 from share.dramatiq.middleware.prometheus import PrometheusMetrics
 
@@ -34,6 +37,7 @@ broker = RedisBroker(
         PrometheusMetrics(),
         HealthCheck(),
         result_middleware,
+        AsyncShutdown(kafka_producer_factory.close, redis_client_factory.close, aerospike_client_factory.close),
     ],
 )
 

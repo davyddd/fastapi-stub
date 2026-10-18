@@ -1,8 +1,9 @@
-import json
 import os
 
+from ddaerospike.dsn import AerospikeDsn
+from ddkafka.dsn import KafkaDsn
 from dotenv import load_dotenv
-from pydantic import ClickHouseDsn, HttpUrl, PostgresDsn, RedisDsn, field_validator
+from pydantic import ClickHouseDsn, HttpUrl, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from dddesign.structure.domains.constants import BaseEnum
@@ -42,18 +43,12 @@ class Settings(BaseSettings):
     DRAMATIQ_RESULT_BACKEND_REDIS_URL: RedisDsn
     CACHE_REDIS_URL: RedisDsn
 
-    KAFKA_BOOTSTRAP_SERVERS: list[str]
+    KAFKA_URL: KafkaDsn  # kafka://host[:port][,host[:port]]
+    AEROSPIKE_URL: AerospikeDsn  # aerospike://host[:port][,host[:port]]/<namespace>
     KAFKA_TOPIC_PARTITIONS_SES_EVENT: int
     KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT: int
 
     SENTRY_DSN: HttpUrl | None = None
-
-    @field_validator('KAFKA_BOOTSTRAP_SERVERS', mode='before')
-    @classmethod
-    def parse_kafka_bootstrap_servers(cls, v: str | list) -> list:
-        if isinstance(v, list):
-            return v
-        return json.loads(v)
 
 
 settings = Settings()  # type: ignore

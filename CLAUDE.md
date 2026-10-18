@@ -48,6 +48,7 @@ Service commands are defined in `src/manage.py` (runserver, runworker, runschedu
 - `docs/databases/CLICKHOUSE.md`
 - `docs/databases/REDIS.md`
 - `docs/databases/KAFKA.md`
+- `docs/databases/AEROSPIKE.md`
 - `docs/databases/MIGRATIONS.md`
 - `docs/databases/RAW_SQL.md`
 
@@ -59,3 +60,4 @@ Service commands are defined in `src/manage.py` (runserver, runworker, runschedu
 - `docs/conventions/PAGINATION.md`
 - `docs/conventions/FILTERING.md`
 - `docs/conventions/LOGGING.md`
+- `docs/conventions/FEATURE_FLAGS.md`

@@ -1,9 +1,15 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from dddesign.structure.domains.errors import BaseError, CollectionError
 
+from config.databases.aerospike import aerospike_client_factory
+from config.databases.kafka import kafka_producer_factory
+from config.databases.redis import redis_client_factory
 from config.entrypoints.dramatiq import dramatiq_facade_impl
 from config.logging.configure import configure_logging_handlers
 from config.logging.log_properties import log_properties_registry
@@ -18,7 +24,18 @@ from share.fastapi.exception_handlers import (
 )
 from share.fastapi.middlewares import LogPropertiesManagerMiddleware, RequestResponseLoggingMiddleware, SentryTagsMiddleware
 
-app = FastAPI(title=settings.PROJECT_NAME, debug=settings.DEBUG, servers=[{'url': settings.SERVER_URL}])
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # noqa: ARG001
+    yield
+    # Runs after the server stopped accepting requests and the in-flight ones finished:
+    # the producer's buffer only reaches Kafka while the process runs.
+    await kafka_producer_factory.close()
+    await redis_client_factory.close()
+    await aerospike_client_factory.close()
+
+
+app = FastAPI(title=settings.PROJECT_NAME, debug=settings.DEBUG, servers=[{'url': settings.SERVER_URL}], lifespan=lifespan)
 app.include_router(router)
 
 app.exception_handler(BaseError)(handle_base_error)

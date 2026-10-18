@@ -6,7 +6,7 @@ from sqlalchemy.pool import AsyncAdaptedQueuePool
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from dddesign.structure.domains.constants import BaseEnum
-from ddsql.connections import ConnectionManager, ConnectionManagerFactory
+from ddutils.connections import ConnectionManager, ConnectionManagerFactory
 from ddutils.scoped_registry import ScopedRegistry
 
 from config.settings import settings

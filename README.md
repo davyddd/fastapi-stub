@@ -191,6 +191,7 @@ Application:
 - `clickhouse-connect`, `clickhouse-sqlalchemy` — ClickHouse HTTP client and SQLAlchemy dialect
 - `redis` — Redis client
 - `aiokafka` — Kafka client
+- `aerospike-native` — Aerospike client
 - `httpx` — HTTP client for external services
 - `typer` — django-like `./manage.py` CLI
 - `sentry-sdk` — performance tracing and error reporting
@@ -198,6 +199,8 @@ Application:
 - [ddutils](https://github.com/davyddd/ddutils) — shared utilities (convertors, object getters)
 - [ddsql](https://github.com/davyddd/ddsql) — SQL query builder and database adapters
 - [ddredis](https://github.com/davyddd/ddredis) — Redis cache and distributed lock
+- [ddkafka](https://github.com/davyddd/ddkafka) — Kafka batch consumer, lock-guarded consumer maker and producer
+- [ddaerospike](https://github.com/davyddd/ddaerospike) — Aerospike typed records, filters and set manager
 
 ### Databases
 
@@ -206,6 +209,7 @@ Infrastructure:
 - ClickHouse — analytical data storage
 - Redis-compatible in-memory DB (Redis, KeyDB, ValKey, Dragonfly, etc.) — temporary data and task broker
 - Kafka — event streaming
+- Aerospike — key-value records that expire: feature flags, offloaded payloads
 
 Details on working with each database:
 
@@ -215,6 +219,7 @@ Details on working with each database:
 - [Raw SQL](docs/databases/RAW_SQL.md) — complex queries using SQLBase and serialization
 - [Redis](docs/databases/REDIS.md) — async client for caching and distributed locking
 - [Kafka](docs/databases/KAFKA.md) — async message production and consumption
+- [Aerospike](docs/databases/AEROSPIKE.md) — typed records in sets, manager per set
 
 ### Conventions
 
@@ -227,3 +232,4 @@ Project conventions and agreements:
 - [Logging](docs/conventions/LOGGING.md) — request/response logging, log properties and middleware
 - [Filtering](docs/conventions/FILTERING.md) — data-access query contracts: `FilterParams`, lookups, `FilterSet`
 - [Pagination](docs/conventions/PAGINATION.md) — HTTP contract of list endpoints and unified pagination meta
+- [Feature Flags](docs/conventions/FEATURE_FLAGS.md) — kill-switches, rollouts by proportion and payloads, read through a per-process cache

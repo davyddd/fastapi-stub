@@ -5,7 +5,7 @@ from clickhouse_connect import create_async_client
 from clickhouse_connect.driver import AsyncClient
 
 from dddesign.structure.domains.constants import BaseEnum
-from ddsql.connections import ConnectionManager, ConnectionManagerFactory
+from ddutils.connections import ConnectionManager, ConnectionManagerFactory
 from ddutils.scoped_registry import ScopedRegistry
 
 from config.settings import settings

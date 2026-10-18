@@ -3,6 +3,25 @@ revision = 3
 requires-python = "==3.14.*"
 
 [[package]]
+name = "aerospike-native"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "uvloop", marker = "sys_platform != 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e1/d1/fbe5b06b80e78e6b1242511a86614a14fd29996f0a43c1264fe9e379520a/aerospike_native-1.0.0.tar.gz", hash = "sha256:c073ed01c0bc92b6299cad4f2936053227088377501fce127dc183e600bac519", size = 531276, upload-time = "2026-10-10T16:53:32.715Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/34/a5dfdfc12d2e1d1036d34b44d450e60890e4e062fd20fe39643bdd3f0a6a/aerospike_native-1.0.0-cp314-cp314-macosx_10_12_x86_64.whl", hash = "sha256:7d62d2f9084b03fe58eed9237e4861d848b99bba312e2db78da4e44ee56c979e", size = 5065003, upload-time = "2026-10-10T16:53:03.985Z" },
+    { url = "https://files.pythonhosted.org/packages/37/e6/9619db9c8dea742656339bff62f2c67d03fdb9d733bb46054a2856f9c588/aerospike_native-1.0.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:4f7b79e1fb2cee08ed5e27d042421af6ea3738f1fdd3d4fd16604f373dce96a8", size = 4830372, upload-time = "2026-10-10T16:53:05.675Z" },
+    { url = "https://files.pythonhosted.org/packages/61/1c/357f5ae4482ce55a9299d549fd1e4f73f3aa1c3e1f0406797805bcf73e0d/aerospike_native-1.0.0-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:28be39096ed20dac2c547495d31d521e7d34117bd3be924905c8b0eddc28e7de", size = 5210588, upload-time = "2026-10-10T16:53:07.497Z" },
+    { url = "https://files.pythonhosted.org/packages/52/1b/0627eb7b8b04559d185550e6e7afbb04111addc2699b5a92e7ee59b08e62/aerospike_native-1.0.0-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:7cd884e0a29e362c19008e8dd0b97791e8df541ba9b4cdaa7606720cf3e7ca1b", size = 5202409, upload-time = "2026-10-10T16:53:09.21Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/72/1c5d473d23c44855761368c26be54b71ae667c8b5a8e73bc6bc3d6b370b2/aerospike_native-1.0.0-cp314-cp314-win_amd64.whl", hash = "sha256:ce8d1e2568c1d35563ce628f1d3518e92d417e8e8b9ab339c148aadda883f2f5", size = 5089446, upload-time = "2026-10-10T16:53:11.047Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/61/573445fb7150e6ad0d584013cc82de2b5f22e2e30bb23564115b63bd07a4/aerospike_native-1.0.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:4dfbd1a092a4b08fae87680d1cd7c1540c61736cc872183d76902666bb6a557e", size = 4783921, upload-time = "2026-10-10T16:53:13.089Z" },
+    { url = "https://files.pythonhosted.org/packages/86/d9/19be70ca3fcdad10d67f8febf05442600277706cc7a3791a4bff382fafa3/aerospike_native-1.0.0-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:7dd9f23294f218f9d08fcbc38e7b6cdeb2579b431effad6a9c3808e5ed4ae212", size = 5152531, upload-time = "2026-10-10T16:53:14.825Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/31/b2614db0e898148c63cfa728d360ce34e80d9d897e06d78a849a08a39f78/aerospike_native-1.0.0-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:8a54e0ea4c4d4e344ea805b1553ccf042c64d7c523ee38d86fed9b395ce4458f", size = 5146160, upload-time = "2026-10-10T16:53:17.09Z" },
+]
+
+[[package]]
 name = "aiokafka"
 version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
@@ -336,51 +355,81 @@ wheels = [
 ]
 
 [[package]]
+name = "ddaerospike"
+version = "0.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aerospike-native" },
+    { name = "dddesign" },
+    { name = "ddutils" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1f/ba/7158fa91cc1fc4a05f13db4918f8d33c8bfc20f1747e09bafcab763ebfb9/ddaerospike-0.0.2.tar.gz", hash = "sha256:56efd42a8c08cc785ca4680f21a5be65fa5df0b873e423454da2a6d991552d5f", size = 16378, upload-time = "2026-10-18T18:54:44.532Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/33/fa/0ed508ea77b29d6a0fbbbf0db8a58762bb98b9f3248e1edd795f407f4fd1/ddaerospike-0.0.2-py3-none-any.whl", hash = "sha256:ceadbd71e97aaecc960793ab69c8d69146c6c5925caa3cd40f6e5b21b33e9b01", size = 20044, upload-time = "2026-10-18T18:54:43.161Z" },
+]
+
+[[package]]
 name = "dddesign"
-version = "2.1.0"
+version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5c/a2/8ae9029723b8ace75d7aa5fc419f208900645563d6a9fb3807a71e1797a4/dddesign-2.1.0.tar.gz", hash = "sha256:6884a4342cc8b33913c5f3ef2a96cea52d60727b4fd4f41b5bc766ead8a78cc0", size = 16985, upload-time = "2026-10-02T18:57:10.223Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/c6/97c75eea216b8838430ba8d1aec78c31ed72f0f715964f061bd918122a03/dddesign-2.1.1.tar.gz", hash = "sha256:5ea313b893d6feb51e381b7be0154e3c7dfba7be12091378af672321a3ef62d8", size = 16976, upload-time = "2026-10-14T11:49:37.328Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/6c/492b6a39c93491fa6c18fabbc4c17a2b9935d97e12cab24f7499e493d99b/dddesign-2.1.0-py3-none-any.whl", hash = "sha256:fbcd2de38796bf8042c9588d5b9531a8c473d36c95b7a1c8c649b1abc7bc5ff2", size = 32757, upload-time = "2026-10-02T18:57:08.964Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/7b/5b870dccc9b2a6e1052dc9b4629b67f43f1034256520c5d1633a96d205fb/dddesign-2.1.1-py3-none-any.whl", hash = "sha256:32bc9b0d827c9aef7e974f472bcb91d0be5c40407e86f7a26d1b017d47528c2c", size = 32756, upload-time = "2026-10-14T11:49:35.917Z" },
+]
+
+[[package]]
+name = "ddkafka"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiokafka" },
+    { name = "ddutils" },
+    { name = "msgpack" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6b/bb/48756644de903bead5fa3e5688dea2880edc0ddc1c3de0f1823c113967c5/ddkafka-0.1.1.tar.gz", hash = "sha256:af9ca34c0bd96d693f5db6a645199afcb524675a1400faf8dae6740afbe8461c", size = 14732, upload-time = "2026-10-18T18:54:31.43Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/e9/0db514692ef394d171054d77b00b0f3c295f32f07bf7a1c9c198f775f456/ddkafka-0.1.1-py3-none-any.whl", hash = "sha256:d2738c63368c54762477ac2314590ea73a28d475ccbc4af1f89fc67b3cc0f664", size = 17939, upload-time = "2026-10-18T18:54:30.117Z" },
 ]
 
 [[package]]
 name = "ddredis"
-version = "0.0.1"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "redis" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c4/d7/85a09b64f08c8ac1fbbeabb7e9e983e6bd22d767d6cf373318f0682c033d/ddredis-0.0.1.tar.gz", hash = "sha256:6c27332492b00bf2132a9aea613b3f6650351e42c383253186d008798a02eebf", size = 6358, upload-time = "2026-10-04T17:51:50.709Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/67/da/31c3d51c4fada4e2a42f44b372383ef1d00a163ebce26f62076f68c5f702/ddredis-0.2.0.tar.gz", hash = "sha256:3fe01d298c2f66c96bc4f56370511c43192d16fe6c000294504fcad7d616fd2f", size = 8899, upload-time = "2026-10-18T18:35:59.815Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/ee/6beea62df10578e4aad58bb8521d490ac26b1c3510d1f0b31ab82868b3ce/ddredis-0.0.1-py3-none-any.whl", hash = "sha256:c5e8b35b2a433e5ed73f2d1b5d21554e0e96b61e55b8d324c1c5fb4578f9b43c", size = 8011, upload-time = "2026-10-04T17:51:49.571Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/22/fc6cd160c0141c1e2c632f76e839f2e482e73ec0d2d0b4eb59447a46e086/ddredis-0.2.0-py3-none-any.whl", hash = "sha256:42166829600087825cce452f060cfd1d7c9efa87b50a2ff522504ff7a3617d98", size = 11378, upload-time = "2026-10-18T18:35:58.573Z" },
 ]
 
 [[package]]
 name = "ddsql"
-version = "0.3.0"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "jinja2" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f6/a2/329f062487a174a863033d7d095abcb562d095baed75c840bff97643d9bd/ddsql-0.3.0.tar.gz", hash = "sha256:62805ee794d7ad8792081b34dc9b24768789ac156be8f9d43e53316b2fdacf60", size = 10792, upload-time = "2026-10-04T15:02:40.045Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/c4/4c95ad0ec0e7541fbae9aa4aa4270d6cfb22dcf14e3ee8119d0ccc9f7d0c/ddsql-0.4.0.tar.gz", hash = "sha256:f0946adeddada33d38d00d73964795ef27a13abac5ac586ba81a826e701706df", size = 9708, upload-time = "2026-10-14T14:58:05.628Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5f/c5/0aef6e0ab555976d3083df2ab31e19c1a357d3f6d2b9718ba53d16becadd/ddsql-0.3.0-py3-none-any.whl", hash = "sha256:ae14c41678767c610e51625c18e3e2947774a7c15dd45095a10067e521a20457", size = 14679, upload-time = "2026-10-04T15:02:38.538Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/fd/d0ec135fb4836a9596a46b837a510568a4e6a1d8983080c01a741903a6d5/ddsql-0.4.0-py3-none-any.whl", hash = "sha256:07f8c7f8702d16a1afcd775adeed0982327111445c1b85a42d52b7b254ff5a41", size = 13132, upload-time = "2026-10-14T14:58:04.168Z" },
 ]
 
 [[package]]
 name = "ddutils"
-version = "0.2.2"
+version = "0.3.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/20/9f/dfd93317cb6820f6325fe89081db2f4eb047f7d7b71f8ac7bbf00005bd8b/ddutils-0.2.2.tar.gz", hash = "sha256:521e96e5751c07e1fa607d6bb32c1b2320088fd0aeb2ecd21ce8aa7ca2e36c5c", size = 12530, upload-time = "2026-10-04T17:04:15.639Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/28/d4/ecd9fb63e06153ffb4dc9f1783f0e17355581ecbc8b9afb5e1858a05e565/ddutils-0.3.3.tar.gz", hash = "sha256:15c11c37f2c6f6e32bc16c59abe6a326ce63afe1824d90943f46fb888a2aa1be", size = 22589, upload-time = "2026-10-18T18:27:02.811Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/1b/2eea50714c3329f90c3c4722d0b856696dc67963a2148d476c9e75f79cc1/ddutils-0.2.2-py3-none-any.whl", hash = "sha256:ea0d1a33a7f0af79ef3da70868e93ad7cc8a03b2c1e933c873a9b38e27acce9e", size = 16121, upload-time = "2026-10-04T17:04:14.311Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/80/46b6a101b5d7341b53d6910798591caebeca4d2e7831027ed1ed0b21b2d7/ddutils-0.3.3-py3-none-any.whl", hash = "sha256:c282e6fbc37ac4679766439cfa8fa316dfab00e5a54aa51120040df41d2742c6", size = 27680, upload-time = "2026-10-18T18:27:01.409Z" },
 ]
 
 [[package]]
@@ -855,12 +904,15 @@ name = "project-name"
 version = "1.0.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "aerospike-native" },
     { name = "aiokafka" },
     { name = "alembic" },
     { name = "apscheduler" },
     { name = "clickhouse-connect" },
     { name = "clickhouse-sqlalchemy" },
+    { name = "ddaerospike" },
     { name = "dddesign" },
+    { name = "ddkafka" },
     { name = "ddredis" },
     { name = "ddsql" },
     { name = "ddutils" },
@@ -893,15 +945,18 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "aerospike-native", specifier = "==1.0.0" },
     { name = "aiokafka", specifier = "==0.13.0" },
     { name = "alembic", specifier = "==1.13.3" },
     { name = "apscheduler", specifier = "==3.11.3" },
     { name = "clickhouse-connect", specifier = "==0.15.1" },
     { name = "clickhouse-sqlalchemy", specifier = "==0.3.2" },
-    { name = "dddesign", specifier = "==2.1.0" },
-    { name = "ddredis", specifier = "==0.0.1" },
-    { name = "ddsql", specifier = "==0.3.0" },
-    { name = "ddutils", specifier = "==0.2.2" },
+    { name = "ddaerospike", specifier = "==0.0.2" },
+    { name = "dddesign", specifier = "==2.1.1" },
+    { name = "ddkafka", specifier = "==0.1.1" },
+    { name = "ddredis", specifier = "==0.2.0" },
+    { name = "ddsql", specifier = "==0.4.0" },
+    { name = "ddutils", specifier = "==0.3.3" },
     { name = "dramatiq", extras = ["redis", "watch", "prometheus"], specifier = "==2.0.1" },
     { name = "fastapi", specifier = "==0.118.1" },
     { name = "httpx", specifier = "==0.28.1" },
