@@ -189,27 +189,27 @@ Application:
 - `alembic` — database migrations
 - `sqlmodel`, `sqlalchemy` (core), `psycopg` — Postgres ORM and driver
 - `clickhouse-connect`, `clickhouse-sqlalchemy` — ClickHouse HTTP client and SQLAlchemy dialect
-- `redis` — Redis client
-- `aiokafka` — Kafka client
-- `aerospike-native` — Aerospike client
+- `redis` — Redis client (cache, locks, dramatiq broker)
+- `aiokafka` — Kafka client (producer and batch consumers, msgpack payloads)
+- `aerospike-native` — Aerospike client (installs uvloop as the event loop policy on import)
 - `httpx` — HTTP client for external services
 - `typer` — django-like `./manage.py` CLI
 - `sentry-sdk` — performance tracing and error reporting
 - [dddesign](https://github.com/davyddd/dddesign) — DDD building blocks
-- [ddutils](https://github.com/davyddd/ddutils) — shared utilities (convertors, object getters)
-- [ddsql](https://github.com/davyddd/ddsql) — SQL query builder and database adapters
-- [ddredis](https://github.com/davyddd/ddredis) — Redis cache and distributed lock
-- [ddkafka](https://github.com/davyddd/ddkafka) — Kafka batch consumer, lock-guarded consumer maker and producer
-- [ddaerospike](https://github.com/davyddd/ddaerospike) — Aerospike typed records, filters and set manager
+- [ddutils](https://github.com/davyddd/ddutils) — shared utilities: `ScopedRegistry` and connection factories behind every database client, feature flags, convertors, annotation and class helpers
+- [ddsql](https://github.com/davyddd/ddsql) — raw SQL queries from templates with Postgres and ClickHouse adapters, `using(alias)` to pick the database
+- [ddredis](https://github.com/davyddd/ddredis) — Redis cache, distributed lock and a feature flag storage
+- [ddkafka](https://github.com/davyddd/ddkafka) — Kafka producer, batch consumer and lock-guarded consumer maker, `KafkaDsn` settings field
+- [ddaerospike](https://github.com/davyddd/ddaerospike) — Aerospike typed records, model-bound filters, a manager per set and the feature flag storage in use
 
 ### Databases
 
 Infrastructure:
 - PostgreSQL — primary data storage
 - ClickHouse — analytical data storage
-- Redis-compatible in-memory DB (Redis, KeyDB, ValKey, Dragonfly, etc.) — temporary data and task broker
-- Kafka — event streaming
-- Aerospike — key-value records that expire: feature flags, offloaded payloads
+- Redis-compatible in-memory DB (Redis, KeyDB, ValKey, Dragonfly, etc.) — cache, distributed locks and the dramatiq broker
+- Kafka — event streaming between contexts and services
+- Aerospike — key-value records read by primary key at high rate, with TTLs: feature flags, offloaded payloads, counters
 
 Details on working with each database:
 
@@ -217,9 +217,9 @@ Details on working with each database:
 - [Postgres](docs/databases/POSTGRES.md) — ORM models, UUID primary keys, timestamp mixins
 - [ClickHouse](docs/databases/CLICKHOUSE.md) — table creation via native SQL migrations
 - [Raw SQL](docs/databases/RAW_SQL.md) — complex queries using SQLBase and serialization
-- [Redis](docs/databases/REDIS.md) — async client for caching and distributed locking
-- [Kafka](docs/databases/KAFKA.md) — async message production and consumption
-- [Aerospike](docs/databases/AEROSPIKE.md) — typed records in sets, manager per set
+- [Redis](docs/databases/REDIS.md) — connection aliases, `GenericCache` and `RedisLock` through the client factory
+- [Kafka](docs/databases/KAFKA.md) — producer per cluster alias, batch consumers, lock-guarded consumer maker
+- [Aerospike](docs/databases/AEROSPIKE.md) — client wiring, `AerospikeData` records, a manager per set, filters, local setup
 
 ### Conventions
 
