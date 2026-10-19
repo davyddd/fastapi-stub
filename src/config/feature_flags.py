@@ -1,6 +1,5 @@
 from ddaerospike.feature_flags import AerospikeFeatureFlagStorage, FeatureFlagData
 from ddaerospike.manager import AerospikeManager
-
 from ddutils.feature_flags import FeatureFlags
 
 from config.databases.aerospike import AerospikeConnectionAlias, aerospike_client_factory

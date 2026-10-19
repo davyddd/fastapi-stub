@@ -1,12 +1,12 @@
 import os
 
-from ddaerospike.dsn import AerospikeDsn
-from ddkafka.dsn import KafkaDsn
 from dotenv import load_dotenv
 from pydantic import ClickHouseDsn, HttpUrl, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from ddaerospike.dsn import AerospikeDsn
 from dddesign.structure.domains.constants import BaseEnum
+from ddkafka.dsn import KafkaDsn
 
 CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 DOTENV_PATH = os.path.join(CONFIG_DIR, '.env')

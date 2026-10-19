@@ -1,10 +1,10 @@
 from functools import partial
 
 from aiokafka import AIOKafkaProducer
-from ddkafka.config import ProducerConfig
-from ddkafka.producer import BaseKafkaProducer, create_producer
 
 from dddesign.structure.domains.constants import BaseEnum
+from ddkafka.config import ProducerConfig
+from ddkafka.producer import BaseKafkaProducer, create_producer
 from ddutils.connections import ConnectionManager, ConnectionManagerFactory
 from ddutils.scoped_registry import ScopedRegistry
 

@@ -111,7 +111,7 @@ section-order = [
 "config" = ["config"]
 "common" = ["common"]
 "framework" = ["fastapi", "dramatiq", "apscheduler"]
-"ddlibs" = ["dddesign", "ddutils", "ddsql"]
+"ddlibs" = ["dddesign", "ddutils", "ddsql", "ddredis", "ddkafka", "ddaerospike"]
 
 
 [lint.flake8-quotes]

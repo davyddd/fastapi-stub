@@ -1,8 +1,8 @@
 from functools import partial
 
 from aerospike_native import Client, ClientPolicy, new_client
-from ddaerospike.dsn import AerospikeDsn
 
+from ddaerospike.dsn import AerospikeDsn
 from dddesign.structure.domains.constants import BaseEnum
 from ddutils.connections import ConnectionManager, ConnectionManagerFactory
 from ddutils.scoped_registry import ScopedRegistry
