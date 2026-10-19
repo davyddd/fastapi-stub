@@ -19,7 +19,7 @@ Service commands are defined in `src/manage.py` (runserver, runworker, runschedu
 - **Repository**: 1 table = 1 Repository
 - **Service**: no dependencies on App/Repo/Adapter, single `handle` method
 - **Contexts**: independent, no cross-imports (except via Adapters)
-- **`__init__.py`**: always create in modules, but keep empty. Exceptions: Dramatiq tasks, SQLAlchemy models, HTTP routers in `ports/http/` (need explicit exports)
+- **`__init__.py`**: always create in modules, but keep empty. Exceptions: Dramatiq tasks, SQLAlchemy models, HTTP routers in `ports/http/` (need explicit exports) and the `share/*` packages, which re-export their public names
 - **Don't create empty modules**: only create directories/modules when they contain actual code. Don't pre-create empty structures "for future use"
 - **`@classmethod` return type**: always use `Self` (from `typing`) as return type for classmethods that return an instance of the class
 - **SQLAlchemy models**: use simple types (`str`, `int`, `bool`, etc.) for columns, not enums or complex types. All validation is done at the code level (entities, services)

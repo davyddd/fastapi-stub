@@ -38,17 +38,25 @@ Installation instructions and more details about Docker architecture can be foun
     cp src/config/init_dot_env src/config/.env
     ```
 
-2. Run migrations
+2. Start the databases (Postgres, ClickHouse, Redis, Kafka, Aerospike) in the background
+
+    ```bash
+    fab deps
+    ```
+
+3. Run migrations
 
    ```bash
    fab migrate
    ```
 
-3. Start the web server
+4. Start the web server
 
     ```bash
     fab run
     ```
+
+`docker-compose up -d kafka-ui` adds a Kafka UI at http://localhost:8080; it is not part of `fab deps`.
 
 ### Environments
 
@@ -68,7 +76,10 @@ Example:
 # run dramatiq for ALL queues and watch for changes
 ./manage.py runworker --processes 1 --threads 1 --watch
 
-# migrations
+# run the cron scheduler that enqueues periodic tasks
+./manage.py runscheduler
+
+# migrations; every command takes --db postgres (default) or --db clickhouse
 ./manage.py makemigrations --message 'Added A for B'
 ./manage.py checkmigrations
 ./manage.py mergemigrations
@@ -83,23 +94,25 @@ Example:
 
 `fabric` provides shortcuts for common Docker-based development commands.
 
-Install `fabric3` (unofficial package) or `fabric<2.0` (official package):
+Install `fabric3` (unofficial package) or `fabric<2.0` (official package) as a standalone tool:
 
 ```bash
-sudo pip3 install Fabric3
+pipx install fabric3
 ```
 
 or
 
 ```bash
-sudo pip install "fabric<2.0"
+pipx install "fabric<2.0"
 ```
 
 Commands:
 
 * `fab base` - build / rebuild the base image (probably will never be needed)
 * `fab build` - build / rebuild the main image
-* `fab linters` - run available linters (see details in [Code Analysis](#code-analysis))
+* `fab deps` - start the databases in the background
+* `fab linters` - run the linters with their fixers (`ruff check --fix`, `ruff format`), then the checkers (see [Code Analysis](#code-analysis))
+* `fab tests` - run pytest
 * `fab run` - run the web application locally
 * `fab worker` - run the background worker locally
 * `fab scheduler` - run the task scheduler locally
@@ -109,8 +122,10 @@ Commands:
 * `fab migrate` - apply migrations
 * `fab shell` - enter shell
 * `fab bash` - enter container's bash
+* `fab execute:"<command>"` - run any command inside the container
 * `fab kill` - kill all running docker containers
 * `fab remove_none_images` - remove all unused docker images
+* `fab remove_all_containers` - remove all containers and volumes, the databases included
 
 **Note**: When modifying project dependencies, remember to rebuild the docker image using the `fab build` command.
 
@@ -125,7 +140,9 @@ Project dependencies are orchestrated by [uv](https://docs.astral.sh/uv/).
 * `uv sync` - sync dependencies from lockfile
 
 **Note**: Always specify a version for each dependency — either an exact version
-or a version range (e.g., >=1.2.0) — to ensure consistent and predictable builds.
+or a version range (e.g., >=1.2.0) — to ensure consistent and predictable builds. Every package the code
+imports is a direct dependency, even when another dependency would pull it in anyway (`sqlalchemy`,
+`python-dotenv`): a transitive version is not under this project's control.
 
 ### Code Analysis
 
@@ -156,6 +173,11 @@ lint-imports --config lint-imports.toml
 complexipy
 ```
 
+The commands above only check; `fab linters` runs `ruff check --fix` and `ruff format` first, so it changes files.
+`complexipy` reads `complexipy.toml` from the current directory and its `exclude` entries are globs
+(`**/alembic/**`), a bare directory name matches nothing. A function that has to stay complex is marked with
+`# complexipy: ignore` on its `def` line, or on the decorator line when it is decorated.
+
 ### Debugging
 
 * `ipdb` — use the `breakpoint()` builtin call
@@ -185,7 +207,11 @@ Application:
 - `fastapi` — web framework and automated swagger documentation
 - `dramatiq` — async task queue (Redis as broker)
 - `apscheduler` — scheduled tasks
-- `pydantic` — serialization and data validation
+- `pydantic`, `pydantic-settings` — serialization, data validation and the `.env`-backed settings
+- `python-json-logger` — JSON log records
+- `python-multipart` — form and file uploads in FastAPI
+- `msgpack` — Kafka payloads
+- `jinja2` — HTML and text templates (`config.templates.jinja2.jinja_env`, loader rooted at `src/templates`)
 - `alembic` — database migrations
 - `sqlmodel`, `sqlalchemy` (core), `psycopg` — Postgres ORM and driver
 - `clickhouse-connect`, `clickhouse-sqlalchemy` — ClickHouse HTTP client and SQLAlchemy dialect
@@ -209,7 +235,7 @@ Infrastructure:
 - ClickHouse — analytical data storage
 - Redis-compatible in-memory DB (Redis, KeyDB, ValKey, Dragonfly, etc.) — cache, distributed locks and the dramatiq broker
 - Kafka — event streaming between contexts and services
-- Aerospike — key-value records read by primary key at high rate, with TTLs: feature flags, offloaded payloads, counters
+- Aerospike — key-value records read by primary key at high rate, with TTLs: feature flags, offloaded payloads
 
 Details on working with each database:
 

@@ -55,7 +55,7 @@ def _health_pinger(pid: int, worker):
         # Check 1: all WorkerThreads alive
         dead_threads = [t for t in worker.workers if not t.is_alive()]
         if dead_threads:
-            logger.warning('Dead worker threads detected: %d/%d for worker %d', len(dead_threads), len(worker.workers), pid)
+            logger.warning(f'Dead worker threads detected: {len(dead_threads)}/{len(worker.workers)} for worker {pid}')
             continue
 
         # Check 2: event loop responsive
@@ -67,7 +67,7 @@ def _health_pinger(pid: int, worker):
             future = asyncio.run_coroutine_threadsafe(_ping(), event_loop_thread.loop)
             future.result(timeout=HEALTH_PING_INTERVAL)
         except TimeoutError, RuntimeError:
-            logger.warning('Event loop ping failed for worker %d', pid)
+            logger.warning(f'Event loop ping failed for worker {pid}')
             continue
 
         # Both checks passed
@@ -145,9 +145,9 @@ def _run_health_server():
 
     removed = _cleanup_stale_files()
     if removed:
-        logger.info('Cleaned up stale worker files: %s', removed)
+        logger.info(f'Cleaned up stale worker files: {removed}')
 
-    logger.info('Starting health check server on port %d...', HEALTH_PORT)
+    logger.info(f'Starting health check server on port {HEALTH_PORT}...')
     try:
         httpd = HTTPServer(('0.0.0.0', HEALTH_PORT), _HealthHandler)
         httpd.serve_forever()

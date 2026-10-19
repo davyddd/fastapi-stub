@@ -1,15 +1,14 @@
 paths = ["src"]
+# complexipy matches exclude entries as globs against the path, a bare name matches nothing
 exclude = [
-    ".git",
-    "__pycache__",
-    ".ruff_cache",
-    ".pytest_cache",
-    ".import_linter_cache",
-    "fabfile.py",
-    "fab_utils.py",
-    "alembic",
-    "scripts",
+    "**/.git/**",
+    "**/__pycache__/**",
+    "**/.ruff_cache/**",
+    "**/.pytest_cache/**",
+    "**/.import_linter_cache/**",
+    "**/fabfile.py",
+    "**/fab_utils.py",
+    "**/alembic/**",
 ]
 max-complexity-allowed = 15
 failed = true
-

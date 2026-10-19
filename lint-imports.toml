@@ -17,21 +17,26 @@ ignore_imports = [
 
 
 [[tool.importlinter.contracts]]
-name = "Domain layer purity (domain must not import from fastapi, dramatiq and redis)"
+name = "Domain layer purity (domain must not import from infrastructure libraries)"
 type = "forbidden"
 source_modules = [
     "app.probe_context",
 ]
+# `ddredis` and `ddkafka` are not listed: `KafkaConsumerMaker` with `RedisLock` is allowed in applications,
+# see docs/conventions/IMPORTS.md
 forbidden_modules = [
     "fastapi",
     "dramatiq",
     "apscheduler",
     "httpx",
+    "sentry_sdk",
     "ddsql",
     "sqlmodel",
     "sqlalchemy",
     "clickhouse_connect",
+    "clickhouse_sqlalchemy",
     "redis",
+    "aiokafka",
     "aerospike_native",
 ]
 ignore_imports = [

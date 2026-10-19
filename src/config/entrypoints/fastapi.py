@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dddesign.structure.domains.errors import BaseError, CollectionError
 
 from config.databases.aerospike import aerospike_client_factory
+from config.databases.clickhouse import clickhouse_client_factory
 from config.databases.kafka import kafka_producer_factory
 from config.databases.redis import redis_client_factory
 from config.entrypoints.dramatiq import dramatiq_facade_impl
@@ -33,6 +34,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # noqa: ARG001
     await kafka_producer_factory.close()
     await redis_client_factory.close()
     await aerospike_client_factory.close()
+    await clickhouse_client_factory.close()
 
 
 app = FastAPI(title=settings.PROJECT_NAME, debug=settings.DEBUG, servers=[{'url': settings.SERVER_URL}], lifespan=lifespan)

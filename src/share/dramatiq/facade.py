@@ -50,7 +50,7 @@ class BaseDramatiqFacade(ABC):
             Applied in order (first middleware is outermost).
 
     Example:
-        # config/dramatiq.py
+        # config/entrypoints/dramatiq.py
         from share.dramatiq.facade import BaseDramatiqFacade
         from config.settings import settings
 
@@ -63,7 +63,7 @@ class BaseDramatiqFacade(ABC):
         dramatiq_facade_impl.setup_tasks()
 
         # Usage in other modules
-        from config.dramatiq import dramatiq_facade_impl
+        from config.entrypoints.dramatiq import dramatiq_facade_impl
 
         dramatiq_facade_impl.send_task(task_name='my_task', arg1='value')
     """

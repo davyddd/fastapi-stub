@@ -101,7 +101,7 @@ class ProfileRepository(Repository):
             await session.flush()
 
     async def update(self, entity: Profile) -> None:
-        if not entity.has_changed:
+        if not entity.has_changed:  # `Profile` mixes in `TrackChangesMixin` from dddesign
             return
 
         async with postgres_session_factory() as session:
@@ -122,6 +122,8 @@ written. `rowcount` is fine after `UPDATE` / `DELETE`.
 
 **Example:**
 ```python
+from sqlalchemy.dialects.postgresql import insert
+
 statement = (
     insert(TransactionEventModel)
     .values(**instance.model_dump(exclude={'created_at', 'updated_at'}))
@@ -140,6 +142,7 @@ More details on SQL queries see in [RAW_SQL.md](./RAW_SQL.md).
 **Example:**
 ```python
 from typing import TypedDict
+from uuid import UUID
 
 from dddesign.structure.infrastructure.repositories import Repository
 from ddsql.query import Query
@@ -148,7 +151,7 @@ from config.databases.services.sql import SQL
 
 
 class ProfileWithStats(TypedDict):
-    profile_id: int
+    profile_id: UUID
     name: str
     subscription_count: int
 

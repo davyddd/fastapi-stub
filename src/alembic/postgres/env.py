@@ -36,9 +36,9 @@ def load_models():
 
 load_models()
 
-# Child partitions of partitioned tables (e.g. sticky_email_settings_model_y2026m07) have no
-# SQLModel of their own — they are created and dropped by a periodic task. Without this filter
-# autogenerate would reflect them as unknown tables and emit drop_table for each.
+# Monthly child partitions of partitioned tables (`<table>_y2026m07`) have no SQLModel of their
+# own: they are created and dropped by a periodic task. Without this filter autogenerate would
+# reflect them as unknown tables and emit drop_table for each.
 PARTITION_TABLE_RE = re.compile(r'.+_y\d{4}m\d{2}$')
 
 

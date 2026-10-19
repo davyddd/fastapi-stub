@@ -13,15 +13,16 @@ Initially calls Applications directly; can be replaced with HTTP / gRPC / messag
 ```python
 from dddesign.structure.infrastructure.adapters.internal import InternalAdapter
 
-from app.profile_context.applications.profile import profile_app_impl
-from app.profile_context.domains.entities.profile import Profile
+from app.order_context.domains.dto.profile import Profile
+from app.profile_context.applications.profile import ProfileApp, profile_app_impl
 
 
 class ProfileAdapter(InternalAdapter):
-    @staticmethod
-    async def get(profile_id: ProfileId) -> Profile:
+    profile_app: ProfileApp = profile_app_impl
+
+    async def get(self, profile_id: ProfileId) -> Profile:
         profile = await self.profile_app.get(profile_id)
-        return Profile.model_validate(profile)
+        return Profile.model_validate(profile.model_dump())  # the calling context's own DTO
 
 
 profile_adapter_impl = ProfileAdapter()

@@ -45,8 +45,6 @@ class Settings(BaseSettings):
 
     KAFKA_URL: KafkaDsn  # kafka://host[:port][,host[:port]]
     AEROSPIKE_URL: AerospikeDsn  # aerospike://host[:port][,host[:port]]/<namespace>
-    KAFKA_TOPIC_PARTITIONS_SES_EVENT: int
-    KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT: int
 
     SENTRY_DSN: HttpUrl | None = None
 

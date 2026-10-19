@@ -6,9 +6,8 @@ from redis.exceptions import ConnectionError, TimeoutError  # noqa: A004
 
 from dddesign.structure.domains.constants import BaseEnum
 from ddutils.connections import ConnectionManager, ConnectionManagerFactory
-from ddutils.scoped_registry import ScopedRegistry
+from ddutils.scoped_registry import ScopedRegistry, process_loop_scope
 
-from config.databases.scopes import process_loop_scope
 from config.settings import settings
 
 config = {

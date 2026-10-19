@@ -4,7 +4,6 @@
 .idea/*
 .vscode/*
 *.dump
-*.sql
 .__pycache__/*
 .pytest_cache/
 .ruff_cache/

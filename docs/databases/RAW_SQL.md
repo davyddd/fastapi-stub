@@ -1,11 +1,13 @@
 ## Raw SQL
 
-For complex queries (joins, aggregations, analytics), use the `SQLBase` component from `ddsql`.
-See usage examples in [POSTGRES.md](./POSTGRES.md) and [CLICKHOUSE.md](./CLICKHOUSE.md).
+For complex queries (joins, aggregations, analytics), use the `SQLBase` component from `ddsql`. The project's
+entry point is `SQL` in `config.databases.services.sql`, with the `postgres` and `clickhouse` adapters wired to the
+connection factories. See usage examples in [POSTGRES.md](./POSTGRES.md) and [CLICKHOUSE.md](./CLICKHOUSE.md).
 
 ### Serialization
 
-Use `serialize_value(...)` in templates. 
+Use `serialize_value(...)` in templates. Strings are escaped per dialect, so quotes, backslashes and control
+characters cannot break the query; a NUL character raises for Postgres.
 
 **Type conversions:**
 
@@ -13,12 +15,17 @@ Use `serialize_value(...)` in templates.
 |-------------|------------|------------|
 | `None` | `NULL` | `NULL` |
 | `bool` | `true`/`false` | `true`/`false` |
-| `int`, `float` | `123`, `45.67` | `123`, `45.67` |
+| `int`, `float`, `Decimal` | `123`, `45.67` | `123`, `45.67` |
 | `str` | `'value'` | `'value'` |
 | `UUID` | `'...'::uuid` | `toUUID('...')` |
-| `datetime` | `'...'::timestamp` | `parseDateTimeBestEffort('...')` |
+| `datetime` (naive) | `'...'::timestamp` | `parseDateTime64BestEffort('...', 6)` |
+| `datetime` (aware) | `'...+03:00'::timestamptz` | `parseDateTime64BestEffort('...', 6)` |
 | `date` | `'...'::date` | `toDate('...')` |
-| `list`/`tuple` | `(item1, item2)` | `(item1, item2)` |
+| `list`/`tuple`/`set` | `(item1, item2)` | `(item1, item2)` |
+
+An `Enum` member is serialized by its value, a subclass as its base type (a `ProfileId(UUID)` as a `UUID`).
+`bytes`, dicts, `time` and `timedelta` have no representation and raise `NotImplementedError`; an empty collection
+renders as `()`, which is not valid after `IN`, so guard it in the template.
 
 ### Choosing the database
 

@@ -45,7 +45,9 @@ It solves the N+1 problem: instead of making a separate request for each Entity'
 it collects all required IDs and fetches them in a single batch request via `get_map`.
 
 The factory uses `AggregateDependencyMapper` to define how dependencies are resolved:
-- `method_getter` — method that fetches related data (`get_map` for batch, `get` for single)
+- `method_getter` — method that fetches related data (`get_map` for batch, `get` for single). It must be a plain
+  `def` with annotations: `create_list` is synchronous and the getter is introspected, so the related argument is
+  annotated with the id type or a sequence of it, never `Optional`, and a bulk getter returns `dict[Id, Related]`
 - `entity_attribute_name` — field in Entity containing the foreign key (e.g., `icon_id`)
 - `aggregate_attribute_name` — field in Aggregate where the resolved object is stored (e.g., `icon`)
 
@@ -59,14 +61,11 @@ from app.media_context.applications.media import MediaApp, media_app_impl
 class MediaAdapter(InternalAdapter):
     media_app: MediaApp = media_app_impl
     
-    def get(self, media_id: MediaId | None) -> Media | None:
-        if media_id is None:
-            return None
-
+    def get(self, media_id: MediaId) -> Media | None:
         medias = self.get_map((media_id,))
         return next(iter(medias.values()), None)
 
-    def get_map(self, media_ids: tuple[str, ...]) -> dict[str, Media]:
+    def get_map(self, media_ids: tuple[MediaId, ...]) -> dict[MediaId, Media]:
         if not media_ids:
             return {}
 

@@ -5,9 +5,8 @@ from aerospike_native import Client, ClientPolicy, new_client
 from ddaerospike.dsn import AerospikeDsn
 from dddesign.structure.domains.constants import BaseEnum
 from ddutils.connections import ConnectionManager, ConnectionManagerFactory
-from ddutils.scoped_registry import ScopedRegistry
+from ddutils.scoped_registry import ScopedRegistry, process_loop_scope
 
-from config.databases.scopes import process_loop_scope
 from config.settings import settings
 
 # Milliseconds: opening a socket to a node, on the first connect and whenever a per-node pool grows

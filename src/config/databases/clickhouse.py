@@ -33,8 +33,8 @@ async def _create_client(alias: ClickhouseConnectionAlias) -> AsyncClient:
 
 
 def _build_client_registry(alias: ClickhouseConnectionAlias) -> ScopedRegistry[AsyncClient]:
-    # One client per process, nobody clears it. `AsyncClient` is itself a pool: a urllib3 connection
-    # pool plus a ThreadPoolExecutor that runs the queries, and it carries no per-task state
+    # One client per process, closed by `clickhouse_client_factory.close()` on shutdown. `AsyncClient` is itself a
+    # pool: a urllib3 connection pool plus a ThreadPoolExecutor that runs the queries, and it carries no per-task state
     # (`create_async_client` leaves `autogenerate_session_id` off, so concurrent queries never share a
     # ClickHouse session).
     return ScopedRegistry[AsyncClient](

@@ -15,7 +15,6 @@ exclude = [
     "fabfile.py",
     "fab_utils.py",
     "**/alembic/**",
-    "**/scripts/**",
 ]
 
 [rules]
@@ -25,13 +24,9 @@ deprecated = "ignore"
 [analysis]
 allowed-unresolved-imports = [
     "IPython.*",
-    "aioboto3.*",
     "apscheduler.*",
     "fabric.*",
     "msgpack",
     "msgpack.*",
     "aiokafka.*",
-    "cryptography.*",
-    "sniffio.*",
-    "pkg_resources.*",
 ]

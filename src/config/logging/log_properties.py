@@ -1,12 +1,11 @@
 import time
 import uuid
-from contextvars import ContextVar
 from typing import Any
 
 from pydantic import Field, computed_field
 
 from dddesign.structure.domains.value_objects import ValueObject
-from ddutils.scoped_registry import ScopedRegistry
+from ddutils.scoped_registry import ScopedRegistry, execution_scope
 
 
 class Headers(ValueObject):
@@ -28,24 +27,8 @@ async def _create_log_properties(**kwargs: Any) -> LogProperties:
     return LogProperties.model_validate(kwargs)
 
 
-_execution_key: ContextVar[str | None] = ContextVar('log_properties_execution_key', default=None)
-
-
-def _execution_scope(token: str | None) -> str | None:
-    """Scope of one execution (HTTP request, actor run), not of one task.
-
-    The registry passes a fresh `token` when `scope()` is entered and `None` on reads. The key is stored in the
-    execution context only on enter, so coroutines spawned inside the block (`gather`, `TaskGroup`, `create_task`)
-    inherit it and log with the `request_id` of their parent, while a read outside of a request (a startup log)
-    finds no key and `get()` raises instead of planting a key that every request task would inherit.
-    """
-    key = _execution_key.get()
-    if key is None and token is not None:
-        _execution_key.set(token)
-        key = token
-    return key
-
-
 log_properties_registry: ScopedRegistry[LogProperties] = ScopedRegistry[LogProperties](
-    create_func=_create_log_properties, scope_func=_execution_scope
+    # one scope per execution (HTTP request, actor run), inherited by the tasks spawned inside it
+    create_func=_create_log_properties,
+    scope_func=execution_scope('log_properties'),
 )

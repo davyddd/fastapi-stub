@@ -34,8 +34,11 @@ By default, only these methods are allowed for external access:
 | `bulk_delete` | Deletes multiple entities, accepts a collection of PKs |
 | `update_by_filters` | Updates entities matching filters |
 | `delete_by_filters` | Deletes entities matching filters |
+| `exists` | Returns whether any entity matches filters |
+| `count` | Returns the number of entities matching filters |
 
-Use `EXTERNAL_ALLOWED_METHODS` to allow additional methods beyond this set.
+Any other method, private helpers included, fails at class definition. Use `EXTERNAL_ALLOWED_METHODS`, declared as
+a field, to allow additional methods beyond this set.
 
 ```python
 class ProfileRepository(Repository):

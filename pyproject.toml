@@ -10,7 +10,7 @@ dependencies = [
     "typer==0.21.1",
     "pydantic[email]==2.12.5",
     "pydantic-settings==2.6.0",
-    "dddesign==2.1.1",
+    "dddesign==2.1.2",
     "sentry-sdk[fastapi]==2.17.0",
     "psycopg[binary]==3.2.13",
     "sqlmodel==0.0.39",
@@ -20,18 +20,20 @@ dependencies = [
     "clickhouse-connect==0.15.1",
     "httpx==0.28.1",
     "python-json-logger==3.3.0",
-    "ddutils==0.3.3",
+    "ddutils==0.4.1",
     "clickhouse-sqlalchemy==0.3.2",
     "jinja2==3.1.6",
-    "ddsql==0.4.0",
+    "ddsql==0.4.1",
     "redis==6.4.0",
-    "ddredis==0.2.0",
-    "ddkafka==0.1.1",
-    "ddaerospike==0.0.2",
+    "ddredis==0.3.0",
+    "ddkafka==0.1.2",
+    "ddaerospike==0.0.3",
     "aerospike-native==1.0.0",
     "aiokafka==0.13.0",
     "python-multipart==0.0.22",
     "msgpack>=1.0.0",
+    "python-dotenv==1.2.4",
+    "sqlalchemy==2.0.54",
 ]
 
 [dependency-groups]
@@ -42,6 +44,7 @@ dev = [
     "ruff==0.15.10",
     "import-linter==1.12.1",
     "complexipy==8.0.1",
+    "pytest==9.0.3",
 ]
 
 [tool.uv]

@@ -5,7 +5,7 @@ Import rules enforced by `lint-imports` to ensure architectural boundaries.
 **Constraints:**
 
 - **Context independence** — contexts must not import from each other. Exception: `**.infrastructure.**` can import from other contexts.
-- **Domain layer purity** — business logic must not depend on infrastructure libraries (`fastapi`, `dramatiq`, `httpx`, etc.). Exception: `**.infrastructure.**` can use these libraries.
+- **Domain layer purity** — business logic must not depend on infrastructure libraries (`fastapi`, `dramatiq`, `httpx`, the database drivers, etc.). Exception: `**.infrastructure.**` can use these libraries. `ddkafka` and `ddredis` are deliberately not forbidden: an application dedicated to consuming a topic runs `KafkaConsumerMaker` with `RedisLock` itself (see [KAFKA.md](../databases/KAFKA.md)).
 - **Layers contract** — lower layers must not know about upper layers.
 
 ### Layers
@@ -33,15 +33,18 @@ name = "Context independence (contexts must not import from each other)"
 type = "independence"
 modules = [
     # ... other contexts ...
-    "src.app.new_context",
+    "app.new_context",
+]
+ignore_imports = [
+    "**.infrastructure.** -> **",
 ]
 
 [[tool.importlinter.contracts]]
-name = "Domain layer purity (domain must not import from fastapi, dramatiq and redis)"
+name = "Domain layer purity (domain must not import from infrastructure libraries)"
 type = "forbidden"
 source_modules = [
     # ... other contexts ...
-    "src.app.new_context",
+    "app.new_context",
 ]
 
 [[tool.importlinter.contracts]]
@@ -49,6 +52,6 @@ name = "Layers contract"
 type = "layers"
 containers = [
     # ... other contexts ...
-    "src.app.new_context",
+    "app.new_context",
 ]
 ```

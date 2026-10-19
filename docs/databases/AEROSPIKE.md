@@ -2,7 +2,7 @@
 
 Key-value records in sets of a namespace, through [ddaerospike](https://github.com/davyddd/ddaerospike) on
 `aerospike-native`. Used for data that is read by key at high rate and may expire: feature flags, offloaded
-payloads, counters.
+payloads.
 
 ### Client
 
@@ -28,10 +28,23 @@ middleware.
 
 ### Records
 
-A set is described by an `AerospikeData` model: every field is a bin, datetimes are `AerospikeTimestamp`, a nested
-model is a composite bin. The model maps to and from the domain entity.
+A set is described by an `AerospikeData` model (`ddaerospike.data`): every field is a bin, and the model maps to
+and from the domain entity. Bin names are at most 15 characters. Scalars and plain containers (`list[str]`,
+`dict[str, int]`) are simple bins, written as they are. A `BaseModel` field is a composite bin: stored as a map,
+written without its `None` values and validated on read; a list or dict with a schema is declared through a
+pydantic `RootModel` (`class Tags(RootModel[list[str]])`). A field set to `None`, simple or composite, removes the
+bin on `put`; to leave a bin untouched instead, drop it in `filter_bins`. An empty map or list is read back as is,
+so a composite field that may be missing needs a default. Composite bins and plain containers are not filterable
+beyond the null checks (see Filters).
+
+A datetime bin is declared as `AerospikeTimestamp`: stored as integer microseconds since the epoch (UTC), read
+back as an aware datetime, and the representation a filter compares a `datetime` / `date` value against. A bare
+`datetime` / `date` field is rejected at class creation, but only on the model itself: use `AerospikeTimestamp`
+inside composite models too, a bare `datetime` there is stored as an ISO string that no filter matches.
 
 ```python
+from typing import Self
+
 from ddaerospike.data import AerospikeData, AerospikeTimestamp
 
 from app.profile_context.domains.entities.profile import Profile
@@ -45,7 +58,7 @@ class ProfileData(AerospikeData[Profile]):
         return Profile(name=self.name, created_at=self.created_at)
 
     @classmethod
-    def from_entity(cls, entity: Profile) -> 'ProfileData':
+    def from_entity(cls, entity: Profile) -> Self:
         return cls(name=entity.name, created_at=entity.created_at)
 ```
 
@@ -55,9 +68,14 @@ An `AerospikeManager[Data]` is the access to one set, a Django-style manager own
 `dddesign` Repository itself). It is wired with the client factory, the namespace and the set.
 
 ```python
+from typing import ClassVar
+
 from ddaerospike.manager import AerospikeManager
+from dddesign.structure.infrastructure.repositories import Repository
 
 from config.databases.aerospike import AerospikeConnectionAlias, aerospike_client_factory
+
+from app.profile_context.domains.entities.profile import Profile, ProfileId
 
 
 class ProfileManager(AerospikeManager[ProfileData]):
@@ -78,13 +96,56 @@ class ProfileRepository(Repository):
         await self.manager.put(profile.id, ProfileData.from_entity(profile))
 ```
 
-`get_list` / `find_one` take an `AerospikeFilterCollection(ProfileData)`: one secondary-index filter and any number
-of filter expressions, checked against the model's bins. A query with `use_index=True` needs a secondary index on
-that bin, created on the cluster (`asinfo sindex-create`), not by code. See the ddaerospike README for the details.
+The manager's methods: `get(pk) -> Data | None`, `get_map(pks) -> dict[str, Data]` (keyed by `str(pk)`, a missing
+or unanswered key is left out), `get_list(filters=None, limit=40)` and `find_one(filters)` returning
+`AerospikeDataWithPK(pk, data)`, `put(pk, data, ttl=None, *, if_absent=False) -> bool` (merges the model's bins
+into the record; `if_absent` is create-only, `False` when the record exists) and `delete(pk) -> bool`. `limit` is
+an upper bound the server splits across its nodes: a query may return fewer records than `limit` although more
+match, and there is no order. The `*_policy_fields` class attributes override the client policies; an override
+replaces the whole dict, so extend `DEFAULT_WRITE_POLICY` and the others rather than start from scratch, or
+`send_key=True` is gone and queries stop returning `pk`.
+
+### Filters
+
+`get_list` / `find_one` take an `AerospikeFilterCollection(ProfileData)` (`ddaerospike.filters`): the conditions
+of one query on a set, ANDed, bound to the set's record model. `add_filter` checks that the bin exists and that the
+value matches the scalar the bin holds, and a manager refuses a collection built for another model. The binding
+matters because the server compares typed values: a value of another type than the bin matches nothing, silently.
+The scalar of a bin follows its annotation: `bool`; `int` for `int`, `AerospikeTimestamp` (the value is a
+`datetime` / `date`) and an `Enum` of ints; `float` for `float` and `Decimal`; `str` for `str`, `UUID` and an `Enum`
+of strings. An `int` value widens to a `float` bin, any other mismatch raises. A list, a dict, a union of several
+types and a composite bin take only the null checks.
+
+| Operator | `int`, `float` bins | `str`, `bool` bins | with `use_index=True` |
+|---|---|---|---|
+| `EQUAL`, `NOT_EQUAL` | ✓ | ✓ | `EQUAL` on `int`, `str` |
+| `GT`, `GTE`, `LT`, `LTE` | ✓ | | |
+| `BETWEEN` `(low, high)`, inclusive | ✓ | | `int` |
+| `IS_NULL`, `IS_NOT_NULL` (no value) | any bin, composite too | | |
+
+```python
+from ddaerospike.filters import AerospikeFilterCollection, AerospikeFilterOperator
+
+filters = (
+    AerospikeFilterCollection(ProfileData)
+    .add_filter('project_id', AerospikeFilterOperator.EQUAL, project_id, use_index=True)
+    .add_filter('created_at', AerospikeFilterOperator.GTE, since)
+)
+profiles = await self.manager.get_list(filters, limit=100)
+```
+
+`IS_NULL` is "the bin is missing", since the manager writes `None` as no bin; `NOT_EQUAL` on a missing bin is
+false, so "not equal or missing" is two conditions. One secondary-index filter per query; a query with
+`use_index=True` needs a secondary index on that bin (`asinfo sindex-create`, created by DevOps on the cluster, not
+by code). Without an index the same condition goes in as a filter expression and the query reads the whole set.
+The ddaerospike README has the rest.
+
+### TTL
 
 `ttl_seconds` on the manager is set by every `put`, so the TTL slides: an active record keeps living, one nobody
 touches expires. A `ttl` argument overrides it for that write. Without either a write leaves the record's TTL as
-it is and a new record gets the namespace `default-ttl`, 0 locally: it never expires.
+it is and a new record gets the namespace `default-ttl`, 0 locally: it never expires. A namespace with
+`nsup-period 0` refuses a write that sets a TTL (`ServerError`, FORBIDDEN); the local config runs nsup.
 
 ### Local setup
 

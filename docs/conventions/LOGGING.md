@@ -4,7 +4,7 @@ Structured JSON logging with request-scoped context, automatic log enrichment, a
 
 ### Handlers
 
-The project has two logging handlers. Both are initialized via `configure_logging_handlers()` in each entrypoint (`fastapi.py`, `dramatiq.py`, `apscheduler.py`). In `DEBUG=True` mode, handlers are not initialized.
+The project has two logging handlers. Both are initialized via `configure_logging_handlers()` once per process, on import of `config.entrypoints.dramatiq`, which every entrypoint (`fastapi.py`, `apscheduler.py`, the dramatiq CLI) imports. In `DEBUG=True` mode, handlers are not initialized.
 
 #### stdout (`config.logging.handlers.stdout`)
 
@@ -34,10 +34,12 @@ HTTP Request
   |
   +- LogPropertiesManagerMiddleware        <- context initialization (request_id, headers)
   |    |
-  |    +- RequestResponseLoggingMiddleware  <- REQUEST / RESPONSE logging
+  |    +- SentryTagsMiddleware             <- LogProperties as tags on the Sentry scope
   |         |
-  |         +- Application logic
-  |              +- logger.info({...})     <- LogProperties automatically in every log
+  |         +- RequestResponseLoggingMiddleware  <- REQUEST / RESPONSE logging
+  |              |
+  |              +- Application logic
+  |                   +- logger.info({...})     <- LogProperties automatically in every log
   |
   +- LogProperties cleared
 ```
@@ -102,10 +104,12 @@ Actor execution
   |
   +- LogPropertiesManagerMiddleware  <- context initialization (request_id, duration)
   |    |
-  |    +- TaskLoggingMiddleware      <- Started / Finished / Failed logging
+  |    +- SentryTagsMiddleware       <- LogProperties as tags on the Sentry scope
   |         |
-  |         +- Actor logic
-  |              +- logger.info({...})  <- LogProperties automatically in every log
+  |         +- TaskLoggingMiddleware      <- Started / Finished / Failed logging
+  |              |
+  |              +- Actor logic
+  |                   +- logger.info({...})  <- LogProperties automatically in every log
   |
   +- LogProperties cleared
 ```
@@ -160,11 +164,8 @@ Request-scoped properties available from anywhere within a request via `log_prop
 | `duration` | `float` | Request duration in seconds (computed) |
 | `headers.ip_address` | `str \| None` | From `X-Forwarded-For` header |
 | `headers.domain` | `str \| None` | From `Host` header |
-| `headers.auth_token` | `str \| None` | Masked token from `Authorization` header |
 
-**Token masking:** JWT tokens are decrypted via `DencryptAccessTokenService`, `secret_key_*` tokens are truncated to the first dot.
-
-**log_properties_registry** — a `ScopedRegistry` bound to the execution (HTTP request, actor run), not to a task: its `scope_func` stores the token the registry passes on entering `scope()` in a `ContextVar`, so coroutines spawned inside the request via `asyncio.gather` / `TaskGroup` log with the same `request_id`. Allows retrieving `LogProperties` of the current request from anywhere inside the scope:
+**log_properties_registry** — a `ScopedRegistry` bound to the execution (HTTP request, actor run), not to a task: its `scope_func` is `execution_scope('log_properties')` from ddutils, which stores the token the registry passes on entering `scope()` in a `ContextVar`, so coroutines spawned inside the request via `asyncio.gather` / `TaskGroup` log with the same `request_id`. Allows retrieving `LogProperties` of the current request from anywhere inside the scope:
 
 ```python
 from config.logging.log_properties import log_properties_registry

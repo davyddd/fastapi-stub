@@ -57,11 +57,11 @@ from dddesign.structure.domains.errors import BaseError, CollectionError
 class ProfileApp(Application):
     repo: ProfileRepository = profile_repo_impl
 
-    def create(self, data: ProfileDTO) -> Profile:
+    async def create(self, data: ProfileDTO) -> Profile:
         errors = CollectionError()
         entity = Profile.factory(data)
 
-        if self.repo.exists(email=entity.email):
+        if await self.repo.exists(email=entity.email):
             errors.add(ProfileAlreadyExistsError())
 
         if not ProfanityCheckService(content=entity.full_name).handle():

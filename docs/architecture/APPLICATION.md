@@ -41,8 +41,9 @@ class ProfileApp(Application):
     device_info_app: DeviceInfoApp = device_info_app_impl
 
     async def create(self, data: ProfileDTO) -> Profile:
+        profile = Profile.factory(data)
         async with postgres_session_factory():
-            profile = await self.repo.create(data)
+            await self.repo.create(profile)
             await self.device_info_app.create(profile.id, data.device_info)
 
         return profile
@@ -83,6 +84,6 @@ auth_social_app_factory = ApplicationFactory[AuthSocialApp](
     ),
 )
 
-# note: the argument name must match the lowercase version of the Enum class name
+# the argument name is the snake_case of the enum class name (`SocialDriver` -> `social_driver`)
 auth_apple_app_impl = auth_social_app_factory.get(social_driver=SocialDriver.APPLE)
 ```

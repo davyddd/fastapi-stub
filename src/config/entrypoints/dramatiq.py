@@ -5,6 +5,7 @@ from dramatiq.results import Results
 from dramatiq.results.backends.redis import RedisBackend
 
 from config.databases.aerospike import aerospike_client_factory
+from config.databases.clickhouse import clickhouse_client_factory
 from config.databases.kafka import kafka_producer_factory
 from config.databases.redis import redis_client_factory, redis_dramatiq_broker_client, redis_dramatiq_result_client
 from config.logging.configure import configure_logging_handlers
@@ -37,7 +38,12 @@ broker = RedisBroker(
         PrometheusMetrics(),
         HealthCheck(),
         result_middleware,
-        AsyncShutdown(kafka_producer_factory.close, redis_client_factory.close, aerospike_client_factory.close),
+        AsyncShutdown(
+            kafka_producer_factory.close,
+            redis_client_factory.close,
+            aerospike_client_factory.close,
+            clickhouse_client_factory.close,
+        ),
     ],
 )
 

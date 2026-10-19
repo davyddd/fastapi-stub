@@ -6,9 +6,8 @@ from dddesign.structure.domains.constants import BaseEnum
 from ddkafka.config import ProducerConfig
 from ddkafka.producer import BaseKafkaProducer, create_producer
 from ddutils.connections import ConnectionManager, ConnectionManagerFactory
-from ddutils.scoped_registry import ScopedRegistry
+from ddutils.scoped_registry import ScopedRegistry, process_loop_scope
 
-from config.databases.scopes import process_loop_scope
 from config.settings import settings
 
 
@@ -58,4 +57,6 @@ class KafkaProducer(BaseKafkaProducer):
     producer_factory = kafka_producer_factory  # `alias` stays None: the factory's default cluster
 
 
+# The one producer of the application: repositories and adapters call `kafka_producer_impl.create(topic, event)`
+# (see docs/databases/KAFKA.md). A second cluster gets a second subclass with its `alias`.
 kafka_producer_impl = KafkaProducer()

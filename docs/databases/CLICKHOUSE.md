@@ -31,7 +31,7 @@ AS SELECT ... FROM profile_raw WHERE ...;
 
 All queries use the `SQL` component with `.clickhouse` executor (see [RAW_SQL.md](./RAW_SQL.md) for details).
 The client itself comes from `async with clickhouse_client_factory() as client` in `config.databases.clickhouse` (a `ConnectionManagerFactory`
-from `ddutils.connections` over one process-wide client per `ClickhouseConnectionAlias`; the default `ConnectionManager` closes nothing on exit); `.using(ClickhouseConnectionAlias...)` before `execute()` picks the cluster when there is more than one.
+from `ddutils.connections` over one process-wide client per `ClickhouseConnectionAlias`; the default `ConnectionManager` closes nothing on exit, the clients are closed on shutdown by `clickhouse_client_factory.close()` from the FastAPI `lifespan` and the dramatiq `AsyncShutdown` middleware); `.using(ClickhouseConnectionAlias...)` before `execute()` picks the cluster when there is more than one.
 
 The `Query(model=...)` accepts any typed object: `TypedDict`, `DataTransferObject`, `ValueObject`, etc. 
 Prefer using domain DTOs over `TypedDict` when the result is used beyond the repository.

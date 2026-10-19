@@ -356,7 +356,7 @@ wheels = [
 
 [[package]]
 name = "ddaerospike"
-version = "0.0.2"
+version = "0.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aerospike-native" },
@@ -364,27 +364,27 @@ dependencies = [
     { name = "ddutils" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1f/ba/7158fa91cc1fc4a05f13db4918f8d33c8bfc20f1747e09bafcab763ebfb9/ddaerospike-0.0.2.tar.gz", hash = "sha256:56efd42a8c08cc785ca4680f21a5be65fa5df0b873e423454da2a6d991552d5f", size = 16378, upload-time = "2026-10-18T18:54:44.532Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/57/c657b5cc433b4475c5b089632003055fc73b35ef5b397277cdb9506f0c06/ddaerospike-0.0.3.tar.gz", hash = "sha256:0c122b482b0983fdc5d2551456723531768dba4b81b6bdf8aff75690c4d1d8cc", size = 19940, upload-time = "2026-10-19T18:21:51.755Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/33/fa/0ed508ea77b29d6a0fbbbf0db8a58762bb98b9f3248e1edd795f407f4fd1/ddaerospike-0.0.2-py3-none-any.whl", hash = "sha256:ceadbd71e97aaecc960793ab69c8d69146c6c5925caa3cd40f6e5b21b33e9b01", size = 20044, upload-time = "2026-10-18T18:54:43.161Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/55/5670370308006e30b02c26549ddf2d53d9cb4d07ba17dd419ff953fe90a6/ddaerospike-0.0.3-py3-none-any.whl", hash = "sha256:2faec12ee5f15412d38b70bedc7dc5aed1b2b67ee0b74fcb01d77027b2bc78de", size = 23094, upload-time = "2026-10-19T18:21:50.394Z" },
 ]
 
 [[package]]
 name = "dddesign"
-version = "2.1.1"
+version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4c/c6/97c75eea216b8838430ba8d1aec78c31ed72f0f715964f061bd918122a03/dddesign-2.1.1.tar.gz", hash = "sha256:5ea313b893d6feb51e381b7be0154e3c7dfba7be12091378af672321a3ef62d8", size = 16976, upload-time = "2026-10-14T11:49:37.328Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/05/1221aaaf8923c199fdf12417f2d4fb0d0cde23fd651567f6de470b2d34a8/dddesign-2.1.2.tar.gz", hash = "sha256:604b208125039bfa62ec7ebf47cccaa64a16bdad363c26d01e8618a2076a3a06", size = 20091, upload-time = "2026-10-19T18:00:13.165Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/7b/5b870dccc9b2a6e1052dc9b4629b67f43f1034256520c5d1633a96d205fb/dddesign-2.1.1-py3-none-any.whl", hash = "sha256:32bc9b0d827c9aef7e974f472bcb91d0be5c40407e86f7a26d1b017d47528c2c", size = 32756, upload-time = "2026-10-14T11:49:35.917Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/1a/4ce2a03b1c14875a7019bdc15c982d7f7fa17c2af12d1c75c7179f724a29/dddesign-2.1.2-py3-none-any.whl", hash = "sha256:80f83a89259d63dd58dd3a9cd3547a2e2d418cde544cf7144fa0311f3631d265", size = 35685, upload-time = "2026-10-19T18:00:11.487Z" },
 ]
 
 [[package]]
 name = "ddkafka"
-version = "0.1.1"
+version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiokafka" },
@@ -392,44 +392,44 @@ dependencies = [
     { name = "msgpack" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6b/bb/48756644de903bead5fa3e5688dea2880edc0ddc1c3de0f1823c113967c5/ddkafka-0.1.1.tar.gz", hash = "sha256:af9ca34c0bd96d693f5db6a645199afcb524675a1400faf8dae6740afbe8461c", size = 14732, upload-time = "2026-10-18T18:54:31.43Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/ee/6648f71aa981a801e776837cfbd7bd7fca6bd8218be9c61857b9ffb098c2/ddkafka-0.1.2.tar.gz", hash = "sha256:a2cc71505035a4011d36736982b92a38ce08321d568f7fbb8047f9f6234c734d", size = 17287, upload-time = "2026-10-19T18:14:20.605Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/e9/0db514692ef394d171054d77b00b0f3c295f32f07bf7a1c9c198f775f456/ddkafka-0.1.1-py3-none-any.whl", hash = "sha256:d2738c63368c54762477ac2314590ea73a28d475ccbc4af1f89fc67b3cc0f664", size = 17939, upload-time = "2026-10-18T18:54:30.117Z" },
+    { url = "https://files.pythonhosted.org/packages/74/21/fed1885f08b79e90b90ecdbd3211a16c55bbbd3592980776e799f5745f74/ddkafka-0.1.2-py3-none-any.whl", hash = "sha256:76d4a6ae0467ec490d36e85642367a97127a41b0dee57ef46585c4d24ef2f96d", size = 20079, upload-time = "2026-10-19T18:14:19.106Z" },
 ]
 
 [[package]]
 name = "ddredis"
-version = "0.2.0"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "redis" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/67/da/31c3d51c4fada4e2a42f44b372383ef1d00a163ebce26f62076f68c5f702/ddredis-0.2.0.tar.gz", hash = "sha256:3fe01d298c2f66c96bc4f56370511c43192d16fe6c000294504fcad7d616fd2f", size = 8899, upload-time = "2026-10-18T18:35:59.815Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/ae/27c3fa83f02abb7123b5399cacc12c53b8f6ca4cb237c6e0685f36babb72/ddredis-0.3.0.tar.gz", hash = "sha256:fcf6f8b3367670f0fab613ee69f20536d77f19350afbce6ec58c56d7d191279a", size = 9633, upload-time = "2026-10-19T18:21:59.723Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/22/fc6cd160c0141c1e2c632f76e839f2e482e73ec0d2d0b4eb59447a46e086/ddredis-0.2.0-py3-none-any.whl", hash = "sha256:42166829600087825cce452f060cfd1d7c9efa87b50a2ff522504ff7a3617d98", size = 11378, upload-time = "2026-10-18T18:35:58.573Z" },
+    { url = "https://files.pythonhosted.org/packages/11/2d/00ee3f3f1198487704d6237dc93238e7960f86ea09271d077d86e1ab97a4/ddredis-0.3.0-py3-none-any.whl", hash = "sha256:a8ab046d80000aa791f05a1d757c035747c4813bcf923573d4ead8480a28da45", size = 11816, upload-time = "2026-10-19T18:21:58.359Z" },
 ]
 
 [[package]]
 name = "ddsql"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ddutils" },
     { name = "jinja2" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/c4/4c95ad0ec0e7541fbae9aa4aa4270d6cfb22dcf14e3ee8119d0ccc9f7d0c/ddsql-0.4.0.tar.gz", hash = "sha256:f0946adeddada33d38d00d73964795ef27a13abac5ac586ba81a826e701706df", size = 9708, upload-time = "2026-10-14T14:58:05.628Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/63/03/8138c6148d2bf82a421c5186d043070437d297016d43929a3bf64427e3f2/ddsql-0.4.1.tar.gz", hash = "sha256:e3e77bb7dc600efe7f2b77979fd0aea9777857cc038d275f32e72d80e19f2566", size = 10749, upload-time = "2026-10-19T18:09:29.385Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fb/fd/d0ec135fb4836a9596a46b837a510568a4e6a1d8983080c01a741903a6d5/ddsql-0.4.0-py3-none-any.whl", hash = "sha256:07f8c7f8702d16a1afcd775adeed0982327111445c1b85a42d52b7b254ff5a41", size = 13132, upload-time = "2026-10-14T14:58:04.168Z" },
+    { url = "https://files.pythonhosted.org/packages/03/9c/0a0549500d0c8c6801376737917fe9570144ea087e6075e4552719dce3d8/ddsql-0.4.1-py3-none-any.whl", hash = "sha256:2d9097b21d34c95a7fdf799f4b4aa1f910d1d836fb47244ec9e3bb7473ca6b87", size = 14064, upload-time = "2026-10-19T18:09:27.952Z" },
 ]
 
 [[package]]
 name = "ddutils"
-version = "0.3.3"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/28/d4/ecd9fb63e06153ffb4dc9f1783f0e17355581ecbc8b9afb5e1858a05e565/ddutils-0.3.3.tar.gz", hash = "sha256:15c11c37f2c6f6e32bc16c59abe6a326ce63afe1824d90943f46fb888a2aa1be", size = 22589, upload-time = "2026-10-18T18:27:02.811Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/51/8d/e07934dc3a88b10395504cc39980b08bf6836cb58aa323b8f49d6ff7e458/ddutils-0.4.1.tar.gz", hash = "sha256:29602b11a903f0e204fdd5bdbff9d6808db262a8c47486ea878af623caa1d7c6", size = 35772, upload-time = "2026-10-19T18:00:01.098Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/80/46b6a101b5d7341b53d6910798591caebeca4d2e7831027ed1ed0b21b2d7/ddutils-0.3.3-py3-none-any.whl", hash = "sha256:c282e6fbc37ac4679766439cfa8fa316dfab00e5a54aa51120040df41d2742c6", size = 27680, upload-time = "2026-10-18T18:27:01.409Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/a7/cd0240907c87810f771bfc49cbe0cb9de5fa032ef0525e17ae4b4d5aa435/ddutils-0.4.1-py3-none-any.whl", hash = "sha256:f41becdbbc68a2ae42c807a2b29354ec041d766148206c3fd7b071d3f5ad0ca2", size = 32988, upload-time = "2026-10-19T17:59:59.515Z" },
 ]
 
 [[package]]
@@ -678,6 +678,15 @@ wheels = [
 ]
 
 [[package]]
+name = "iniconfig"
+version = "2.3.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/e1/2069291243c926a2ff1cd706c7f3eeb9b62144bf60f77c9fb9ff2fb26bd3/iniconfig-2.3.1.tar.gz", hash = "sha256:67f4b9c50da0dedf52af349e7749a80a9057a5031199791b906c3bb3ae878960", size = 21209, upload-time = "2026-10-06T22:48:38.076Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/56/43/4ca9e49d27a1fcf6bece6f6aec0ea46bb9112489b93d4b688fb415457bdb/iniconfig-2.3.1-py3-none-any.whl", hash = "sha256:9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7", size = 7552, upload-time = "2026-10-06T22:48:36.959Z" },
+]
+
+[[package]]
 name = "ipdb"
 version = "0.13.13"
 source = { registry = "https://pypi.org/simple" }
@@ -900,6 +909,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pluggy"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/db/7fc19e6f2dc92a966727031389fc2e08b558f0f25eb7403c1119ad4713cd/pluggy-1.7.0.tar.gz", hash = "sha256:d1eaa46ebb595891b860ab086b4d09c8588af65ebd4361b8e8f4bb8920b90ba8", size = 123304, upload-time = "2026-10-15T09:50:58.343Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/40/9e/2b38731e0fc536806f16490e1a12d7f0dc2a1235aa8cc07bcc75416a7daa/pluggy-1.7.0-py3-none-any.whl", hash = "sha256:7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec", size = 27082, upload-time = "2026-10-15T09:50:56.808Z" },
+]
+
+[[package]]
 name = "project-name"
 version = "1.0.0"
 source = { virtual = "." }
@@ -924,10 +942,12 @@ dependencies = [
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic", extra = ["email"] },
     { name = "pydantic-settings" },
+    { name = "python-dotenv" },
     { name = "python-json-logger" },
     { name = "python-multipart" },
     { name = "redis" },
     { name = "sentry-sdk", extra = ["fastapi"] },
+    { name = "sqlalchemy" },
     { name = "sqlmodel" },
     { name = "typer" },
     { name = "uvicorn", extra = ["standard"] },
@@ -939,6 +959,7 @@ dev = [
     { name = "import-linter" },
     { name = "ipdb" },
     { name = "ipython" },
+    { name = "pytest" },
     { name = "ruff" },
     { name = "ty" },
 ]
@@ -951,12 +972,12 @@ requires-dist = [
     { name = "apscheduler", specifier = "==3.11.3" },
     { name = "clickhouse-connect", specifier = "==0.15.1" },
     { name = "clickhouse-sqlalchemy", specifier = "==0.3.2" },
-    { name = "ddaerospike", specifier = "==0.0.2" },
-    { name = "dddesign", specifier = "==2.1.1" },
-    { name = "ddkafka", specifier = "==0.1.1" },
-    { name = "ddredis", specifier = "==0.2.0" },
-    { name = "ddsql", specifier = "==0.4.0" },
-    { name = "ddutils", specifier = "==0.3.3" },
+    { name = "ddaerospike", specifier = "==0.0.3" },
+    { name = "dddesign", specifier = "==2.1.2" },
+    { name = "ddkafka", specifier = "==0.1.2" },
+    { name = "ddredis", specifier = "==0.3.0" },
+    { name = "ddsql", specifier = "==0.4.1" },
+    { name = "ddutils", specifier = "==0.4.1" },
     { name = "dramatiq", extras = ["redis", "watch", "prometheus"], specifier = "==2.0.1" },
     { name = "fastapi", specifier = "==0.118.1" },
     { name = "httpx", specifier = "==0.28.1" },
@@ -965,10 +986,12 @@ requires-dist = [
     { name = "psycopg", extras = ["binary"], specifier = "==3.2.13" },
     { name = "pydantic", extras = ["email"], specifier = "==2.12.5" },
     { name = "pydantic-settings", specifier = "==2.6.0" },
+    { name = "python-dotenv", specifier = "==1.2.4" },
     { name = "python-json-logger", specifier = "==3.3.0" },
     { name = "python-multipart", specifier = "==0.0.22" },
     { name = "redis", specifier = "==6.4.0" },
     { name = "sentry-sdk", extras = ["fastapi"], specifier = "==2.17.0" },
+    { name = "sqlalchemy", specifier = "==2.0.54" },
     { name = "sqlmodel", specifier = "==0.0.39" },
     { name = "typer", specifier = "==0.21.1" },
     { name = "uvicorn", extras = ["standard"], specifier = "==0.32.0" },
@@ -980,6 +1003,7 @@ dev = [
     { name = "import-linter", specifier = "==1.12.1" },
     { name = "ipdb", specifier = "==0.13.13" },
     { name = "ipython", specifier = "==9.16.1" },
+    { name = "pytest", specifier = "==9.0.3" },
     { name = "ruff", specifier = "==0.15.10" },
     { name = "ty", specifier = "==0.0.15" },
 ]
@@ -1166,6 +1190,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/49/2e/ced460408999b33da6b31b0021b0f37d329e202d4169aeb164493778f25b/pygments-2.21.0.tar.gz", hash = "sha256:610ca751c9bc2492b38eb9a38a7fbc93edbbb2d7182edaf34e66ae493dee5c8c", size = 5005329, upload-time = "2026-08-17T08:02:48.824Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl", hash = "sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9", size = 1250147, upload-time = "2026-08-17T08:02:44.912Z" },
+]
+
+[[package]]
+name = "pytest"
+version = "9.0.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "iniconfig" },
+    { name = "packaging" },
+    { name = "pluggy" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7d/0d/549bd94f1a0a402dc8cf64563a117c0f3765662e2e668477624baeec44d5/pytest-9.0.3.tar.gz", hash = "sha256:b86ada508af81d19edeb213c681b1d48246c1a91d304c6c81a427674c17eb91c", size = 1572165, upload-time = "2026-04-07T17:16:18.027Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d4/24/a372aaf5c9b7208e7112038812994107bc65a84cd00e0354a88c2c77a617/pytest-9.0.3-py3-none-any.whl", hash = "sha256:2c5efc453d45394fdd706ade797c0a81091eccd1d6e4bccfcd476e2b8e0ab5d9", size = 375249, upload-time = "2026-04-07T17:16:16.13Z" },
 ]
 
 [[package]]

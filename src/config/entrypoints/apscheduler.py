@@ -8,6 +8,6 @@ scheduler = BlockingScheduler()
 
 dramatiq_facade_impl.setup_tasks()
 for job_path, crontab, job_name in dramatiq_facade_impl.get_cron_jobs():
-    scheduler.add_job(job_path, trigger=CronTrigger.from_crontab(crontab), name=job_name)
+    scheduler.add_job(job_path, trigger=CronTrigger.from_crontab(crontab, timezone='UTC'), name=job_name)
 
 configure_logging_handlers()

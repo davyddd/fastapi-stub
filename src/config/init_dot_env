@@ -10,6 +10,11 @@ DRAMATIQ_RESULT_BACKEND_REDIS_URL=redis://redis/2
 CACHE_REDIS_URL=redis://redis/3
 KAFKA_URL=kafka://kafka:9092
 AEROSPIKE_URL=aerospike://aerospike:3000/application_db
-KAFKA_TOPIC_PARTITIONS_SES_EVENT=1
-KAFKA_TOPIC_PARTITIONS_PROFILE_EVENT=1
+
+# Read with os.getenv, not through Settings; the defaults apply when unset
+# MAX_BODY_LOG_SIZE=1048576             # bytes of a request / response body the logging middleware records
+# DRAMATIQ_HEALTH_PORT=9192             # dramatiq worker health check server
+# DRAMATIQ_HEALTH_PING_INTERVAL=10      # seconds between event loop pings
+# DRAMATIQ_HEALTH_STALE_THRESHOLD=60    # seconds without a ping before a worker counts as dead
+# AEROSPIKE_NO_UVLOOP=1                 # keep asyncio's default loop instead of the uvloop aerospike-native installs
 

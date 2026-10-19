@@ -6,7 +6,8 @@ x-server-template: &server-template
         args:
             BASE_IMAGE_TAG: $BASE_IMAGE_TAG
             DEVELOP_DEPENDENCIES: $DEVELOP_DEPENDENCIES
-            PYTHONBREAKPOINT: import ipdb;ipdb.set_trace
+    environment:
+        PYTHONBREAKPOINT: ipdb.set_trace
     volumes:
         - .:/app
     depends_on:
